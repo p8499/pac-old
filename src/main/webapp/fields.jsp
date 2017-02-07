@@ -98,9 +98,13 @@
                             <tr>
                                 <td><span class="col-sm-2">
                             <a href="/field?path=${requestScope.path}[${moduleStatus.index}]">${field.databaseColumn}</a></span>
-                                    <span class="col-sm-3">${field.description}</span>
-                                    <span class="col-sm-3">${field.javaType}</span>
-                                    <span class="col-sm-1">${pac:upperFirst(field.special.type)}</span>
+                                    <span class="col-sm-2">${field.description}</span>
+                                    <span class="col-sm-3">${field.javaType}
+                                        <c:choose>
+                                            <c:when test="${field.javaType==\"Integer\"}">(${field.integerLength})</c:when>
+                                            <c:when test="${field.javaType==\"Double\"}">(${field.integerLength},${field.fractionLength})</c:when>
+                                            <c:when test="${field.javaType==\"String\"}">(${field.stringLength})</c:when></c:choose></span>
+                                    <span class="col-sm-2">${pac:upperFirst(field.special.type)}</span>
                                     <span class="col-sm-3">
                                 <button type="button"
                                         class="btn btn-default<c:if test="${moduleStatus.first}"> disabled</c:if>"

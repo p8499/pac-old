@@ -60,10 +60,10 @@
                         <tbody>
                         <c:forEach items="${requestScope.target}" var="module" varStatus="moduleStatus">
                             <tr>
-                                <td><span class="col-sm-3">
+                                <td><span class="col-sm-2">
                             <a href="/module?path=${requestScope.path}[${moduleStatus.index}]">${module.id}</a></span>
-                                    <span class="col-sm-3">${module.description}</span>
-                                    <span class="col-sm-3">${module.datasource}</span>
+                                    <span class="col-sm-2">${module.description}</span>
+                                    <span class="col-sm-5">${module.databaseTable}@${module.datasource}</span>
                                     <span class="col-sm-3">
                                 <button type="button"
                                         class="btn btn-default<c:if test="${moduleStatus.first}"> disabled</c:if>"
