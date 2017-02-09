@@ -116,14 +116,14 @@
         <name>checkUnique</name>
         <function-class>com.p8499.pac.Check</function-class>
         <function-signature>void
-            checkUnique(java.util.Map,java.util.Map,javax.servlet.jsp.jstl.core.LoopTagStatus,java.util.List,javax.servlet.jsp.jstl.core.LoopTagStatus)
+            checkUnique(java.util.Map,java.util.Map,javax.servlet.jsp.jstl.core.LoopTagStatus,java.util.Map,javax.servlet.jsp.jstl.core.LoopTagStatus)
         </function-signature>
     </function>
     <function>
         <name>checkUniqueColumn</name>
         <function-class>com.p8499.pac.Check</function-class>
         <function-signature>void
-            checkUniqueColumn(java.util.Map,java.util.Map,javax.servlet.jsp.jstl.core.LoopTagStatus,java.util.List,javax.servlet.jsp.jstl.core.LoopTagStatus,java.lang.String,javax.servlet.jsp.jstl.core.LoopTagStatus)
+            checkUniqueColumn(java.util.Map,java.util.Map,javax.servlet.jsp.jstl.core.LoopTagStatus,java.util.Map,javax.servlet.jsp.jstl.core.LoopTagStatus,java.lang.String,javax.servlet.jsp.jstl.core.LoopTagStatus)
         </function-signature>
     </function>
     <function>

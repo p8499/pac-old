@@ -2,16 +2,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="pac" uri="/WEB-INF/pac.tld" %>
 <c:set scope="request" var="target" value="${pac:read(sessionScope.json,requestScope.path)}"/>
+<c:set var="baseUrl"
+       value='<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"%>'/>
 <html>
 <head>
     <title>PAC Workbench</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/tree.css">
-    <script src="/js/jquery-3.1.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/validator.min.js"></script>
-    <script src="/js/jquery.form.min.js"></script>
-    <script src="/js/tree.js"></script>
+    <link rel="stylesheet" href="${baseUrl}css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="${baseUrl}css/tree.css">
+    <script src="${baseUrl}js/jquery-3.1.1.min.js"></script>
+    <script src="${baseUrl}js/bootstrap.min.js"></script>
+    <script src="${baseUrl}js/validator.min.js"></script>
+    <script src="${baseUrl}js/jquery.form.min.js"></script>
+    <script src="${baseUrl}js/tree.js"></script>
 </head>
 <body>
 <div class="container">
@@ -21,7 +23,7 @@
     <div class="row">
         <ol class="breadcrumb">
             <li>
-                <a href="/project?path=${pac:parent(requestScope.path)}">${pac:read(sessionScope.json,pac:parent(requestScope.path)).name}</a>
+                <a href="${baseUrl}project?path=${pac:parent(requestScope.path)}">${pac:read(sessionScope.json,pac:parent(requestScope.path)).name}</a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -29,15 +31,15 @@
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a href="/envJtee?path=${pac:parent(requestScope.path)}.envJtee">
+                        <a href="${baseUrl}envJtee?path=${pac:parent(requestScope.path)}.envJtee">
                             J2EE Environment</a>
                     </li>
                     <li>
-                        <a href="/envAndroid?path=${pac:parent(requestScope.path)}.envAndroid">
+                        <a href="${baseUrl}envAndroid?path=${pac:parent(requestScope.path)}.envAndroid">
                             Android Environment</a>
                     </li>
                     <li class="active">
-                        <a href="/modules?path=${requestScope.path}">
+                        <a href="${baseUrl}modules?path=${requestScope.path}">
                             Modules</a>
                     </li>
                 </ul>
@@ -61,20 +63,20 @@
                         <c:forEach items="${requestScope.target}" var="module" varStatus="moduleStatus">
                             <tr>
                                 <td><span class="col-sm-2">
-                            <a href="/module?path=${requestScope.path}[${moduleStatus.index}]">${module.id}</a></span>
+                            <a href="${baseUrl}module?path=${requestScope.path}[${moduleStatus.index}]">${module.id}</a></span>
                                     <span class="col-sm-2">${module.description}</span>
                                     <span class="col-sm-5">${module.databaseTable}@${module.datasource}</span>
                                     <span class="col-sm-3">
                                 <button type="button"
                                         class="btn btn-default<c:if test="${moduleStatus.first}"> disabled</c:if>"
-                                        onclick="$.get({url:'/modules/swap?path=${requestScope.path}',data:{i:${moduleStatus.index-1},j:${moduleStatus.index}},success:function(response){window.location.reload();}});">
+                                        onclick="$.get({url:'${baseUrl}modules/swap?path=${requestScope.path}',data:{i:${moduleStatus.index-1},j:${moduleStatus.index}},success:function(response){window.location.reload();}});">
                                     <span class="glyphicon glyphicon-arrow-up"></span></button>
                                 <button type="button"
                                         class="btn btn-default<c:if test="${moduleStatus.last}"> disabled</c:if>"
-                                        onclick="$.get({url:'/modules/swap?path=${requestScope.path}',data:{i:${moduleStatus.index},j:${moduleStatus.index+1}},success:function(response){window.location.reload();}});">
+                                        onclick="$.get({url:'${baseUrl}modules/swap?path=${requestScope.path}',data:{i:${moduleStatus.index},j:${moduleStatus.index+1}},success:function(response){window.location.reload();}});">
                                     <span class="glyphicon glyphicon-arrow-down"></span></button>
                                 <button type="button" class="btn btn-danger"
-                                        onclick="$.ajax({url:'/modules/${moduleStatus.index}?path=${requestScope.path}',method:'DELETE',success:function(response){window.location.reload();}});">
+                                        onclick="$.ajax({url:'${baseUrl}modules/${moduleStatus.index}?path=${requestScope.path}',method:'DELETE',success:function(response){window.location.reload();}});">
                                     <span class="glyphicon glyphicon-remove"></span></button></span>
                                 </td>
                             </tr>
@@ -98,7 +100,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form data-toggle="validator"
-                      onsubmit="event.preventDefault();$.ajax({url:'/modules?path=${requestScope.path}',type:'POST',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1),jteeMaskAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Mask',jteeMapperAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Mapper',jteeConfiguratorAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Configurator',jteeExecutorAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Executor',jteeControllerAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Controller',jteeControllerPath:'api/'+$('#id').val()+'/',jteeAttachmentControllerAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'AttachmentController',jteeAttachmentControllerPath:'api/'+$('#id').val()+'_attachment/',androidBeanAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1),androidMaskAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Mask',androidStubAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Stub'},success:function(response){window.location.reload();}});">
+                      onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}modules?path=${requestScope.path}',type:'POST',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1),jteeMaskAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Mask',jteeMapperAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Mapper',jteeConfiguratorAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Configurator',jteeExecutorAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Executor',jteeControllerAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Controller',jteeControllerPath:'api/'+$('#id').val()+'/',jteeAttachmentControllerAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'AttachmentController',jteeAttachmentControllerPath:'api/'+$('#id').val()+'_attachment/',androidBeanAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1),androidMaskAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Mask',androidStubAlias:$('#id').val().substr(0,1).toUpperCase()+$('#id').val().substr(1)+'Stub'},success:function(response){window.location.reload();}});">
                     <div class="modal-header">
                         <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="post_label">Add a New Model</h4>

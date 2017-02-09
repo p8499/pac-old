@@ -19,8 +19,8 @@ public class Check {
 
     public static void checkModule(Map project, Map module, LoopTagStatus moduleStatus) {
         assertTrue(((List) Util.read(project, String.format("$.modules[?(@.id=='%s')]", module.get("id")))).size() == 1, "Duplicate module found '%s'.", module.get("id"));
-        assertTrue(((List) Util.read(module, "$.fields[?(@.special.type=='key')]")).size() > 0, "Module '%s' does not have a certain key.", module.get("id"));
-        assertTrue(((List) Util.read(module, "$.fields[?(@.special.type=='key')]")).size() <= 1, "Module '%s' defines a compound key which PAC does not support yet.", module.get("id"));
+        assertTrue(((List) Util.read(module, "$.uniques[?(@.key==true)]")).size() > 0, "Module '%s' does not have a certain key.", module.get("id"));
+        assertTrue(((List) Util.read(module, "$.uniques[?(@.key==true)]")).size() <= 1, "Module '%s' defines a compound key which PAC does not support yet.", module.get("id"));
     }
 
     public static void checkField(Map project, Map module, LoopTagStatus moduleStatus, Map field, LoopTagStatus fieldStatus) {
@@ -35,11 +35,13 @@ public class Check {
 
     }
 
-    public static void checkUnique(Map project, Map module, LoopTagStatus moduleStatus, List unique, LoopTagStatus uniqueStatus) {
+    public static void checkUnique(Map project, Map module, LoopTagStatus moduleStatus, Map unique, LoopTagStatus uniqueStatus) {
+        int a = 0;
+        System.out.println("");
 
     }
 
-    public static void checkUniqueColumn(Map project, Map module, LoopTagStatus moduleStatus, List unique, LoopTagStatus uniqueStatus, String uniqueColumn, LoopTagStatus uniqueColumnStatus) {
+    public static void checkUniqueColumn(Map project, Map module, LoopTagStatus moduleStatus, Map unique, LoopTagStatus uniqueStatus, String uniqueColumn, LoopTagStatus uniqueColumnStatus) {
         assertTrue(((List) Util.read(module, String.format("$.fields[?(@.databaseColumn=='%s')]", uniqueColumn))).size() > 0, "Unique '%s'.'%s' defines an unrecognized field '%s'", module.get("id"), Util.join(",", unique), uniqueColumn);
     }
 

@@ -17,7 +17,7 @@ public class Project {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String get(HttpSession session, HttpServletRequest request, HttpServletResponse response, @RequestParam(required = false, defaultValue = "$") String path) {
         if (session.getAttribute("json") == null)
-            session.setAttribute("json", Configuration.defaultConfiguration().jsonProvider().parse("{\"name\":\"MyProject\",\"envJtee\":{\"app\":\"myapp\",\"packageBean\":\"mypack.bean\",\"packageMask\":\"mypack.mask\",\"packageMapper\":\"mypack.mapper\",\"packageConfigurator\":\"mypack.configurator\",\"packageController\":\"mypack.controller\",\"packageControllerAttachment\":\"mypack.controller\",\"datasources\":[]},\"envAndroid\":{\"packageBean\":\"mypack.bean\",\"packageMask\":\"mypack.mask\",\"packageStub\":\"mypack.stub\"},\"modules\":[]}"));
+            session.setAttribute("json", Configuration.defaultConfiguration().jsonProvider().parse("{\"name\":\"MyProject\",\"envJtee\":{\"app\":\"myapp\",\"packageBean\":\"mypack.bean\",\"packageMask\":\"mypack.mask\",\"packageMapper\":\"mypack.mapper\",\"packageConfigurator\":\"mypack.configurator\",\"packageController\":\"mypack.controller\",\"packageControllerAttachment\":\"mypack.controller\",\"datasources\":[],\"baseUrl\":\"http://127.0.0.1/\",\"packageBase\":\"mypack\"},\"envAndroid\":{\"packageBean\":\"mypack.bean\",\"packageMask\":\"mypack.mask\",\"packageStub\":\"mypack.stub\",\"app\":\"myapp_gen\",\"packageBase\":\"mypack\",\"packageView\":\"mypack.view\"},\"modules\":[]}"));
         request.setAttribute("path", path);
         return "/project.jsp";
     }

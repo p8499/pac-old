@@ -2,16 +2,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="pac" uri="/WEB-INF/pac.tld" %>
 <c:set scope="request" var="target" value="${pac:read(sessionScope.json,requestScope.path)}"/>
+<c:set var="baseUrl"
+       value='<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"%>'/>
 <html>
 <head>
     <title>PAC Workbench</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/tree.css">
-    <script src="/js/jquery-3.1.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/validator.min.js"></script>
-    <script src="/js/jquery.form.min.js"></script>
-    <script src="/js/tree.js"></script>
+    <link rel="stylesheet" href="${baseUrl}css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="${baseUrl}css/tree.css">
+    <script src="${baseUrl}js/jquery-3.1.1.min.js"></script>
+    <script src="${baseUrl}js/bootstrap.min.js"></script>
+    <script src="${baseUrl}js/validator.min.js"></script>
+    <script src="${baseUrl}js/jquery.form.min.js"></script>
+    <script src="${baseUrl}js/tree.js"></script>
 </head>
 <body>
 <div class="container">
@@ -21,7 +23,7 @@
     <div class="row">
         <ol class="breadcrumb">
             <li>
-                <a href="/project?path=${pac:parent(pac:parent(requestScope.path))}">${pac:read(sessionScope.json,pac:parent(pac:parent(requestScope.path))).name}</a>
+                <a href="${baseUrl}project?path=${pac:parent(pac:parent(requestScope.path))}">${pac:read(sessionScope.json,pac:parent(pac:parent(requestScope.path))).name}</a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -29,15 +31,15 @@
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a href="/envJtee?path=${pac:parent(pac:parent(requestScope.path))}.envJtee">
+                        <a href="${baseUrl}envJtee?path=${pac:parent(pac:parent(requestScope.path))}.envJtee">
                             J2EE Environment</a>
                     </li>
                     <li>
-                        <a href="/envAndroid?path=${pac:parent(pac:parent(requestScope.path))}.envAndroid">
+                        <a href="${baseUrl}envAndroid?path=${pac:parent(pac:parent(requestScope.path))}.envAndroid">
                             Android Environment</a>
                     </li>
                     <li class="active">
-                        <a href="/modules?path=${pac:parent(requestScope.path)}">
+                        <a href="${baseUrl}modules?path=${pac:parent(requestScope.path)}">
                             Modules</a>
                     </li>
                 </ul>
@@ -52,7 +54,7 @@
                                varStatus="moduleStatus">
                         <li<c:if test="${moduleStatus.index==pac:id(requestScope.path)}">
                             class="active"</c:if>>
-                            <a href="/module?path=${pac:parent(requestScope.path)}[${moduleStatus.index}]">
+                            <a href="${baseUrl}module?path=${pac:parent(requestScope.path)}[${moduleStatus.index}]">
                                 [${moduleStatus.index}] - ${module.id}</a>
                         </li>
                     </c:forEach>
@@ -68,7 +70,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form data-toggle="validator"
-                          onsubmit="event.preventDefault();$.ajax({url:'/module?path=${requestScope.path}',type:'PUT',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#jteeBeanAlias').val(),jteeMaskAlias:$('#jteeMaskAlias').val(),jteeMapperAlias:$('#jteeMapperAlias').val(),jteeConfiguratorAlias:$('#jteeConfiguratorAlias').val(),jteeExecutorAlias:$('#jteeExecutorAlias').val(),jteeControllerAlias:$('#jteeControllerAlias').val(),jteeControllerPath:$('#jteeControllerPath').val(),jteeAttachmentControllerAlias:$('#jteeAttachmentControllerAlias').val(),jteeAttachmentControllerPath:$('#jteeAttachmentControllerPath').val(),androidBeanAlias:$('#androidBeanAlias').val(),androidMaskAlias:$('#androidMaskAlias').val(),androidStubAlias:$('#androidStubAlias').val()},success:function(response){window.location.reload();}});">
+                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}module?path=${requestScope.path}',type:'PUT',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#jteeBeanAlias').val(),jteeMaskAlias:$('#jteeMaskAlias').val(),jteeMapperAlias:$('#jteeMapperAlias').val(),jteeConfiguratorAlias:$('#jteeConfiguratorAlias').val(),jteeExecutorAlias:$('#jteeExecutorAlias').val(),jteeControllerAlias:$('#jteeControllerAlias').val(),jteeControllerPath:$('#jteeControllerPath').val(),jteeAttachmentControllerAlias:$('#jteeAttachmentControllerAlias').val(),jteeAttachmentControllerPath:$('#jteeAttachmentControllerPath').val(),androidBeanAlias:$('#androidBeanAlias').val(),androidMaskAlias:$('#androidMaskAlias').val(),androidStubAlias:$('#androidStubAlias').val()},success:function(response){window.location.reload();}});">
                         <div class="form-group">
                             <label for="id">ID</label>
                             <input class="form-control" id="id" type="text" value="${requestScope.target.id}"
@@ -180,13 +182,13 @@
                         </button>
                     </form>
                     <button class="btn btn-link" type="button">
-                        <a href="/fields?path=${requestScope.path}.fields">Fields</a>
+                        <a href="${baseUrl}fields?path=${requestScope.path}.fields">Fields</a>
                     </button>
                     <button class="btn btn-link" type="button">
-                        <a href="/uniques?path=${requestScope.path}.uniques">Uniques</a>
+                        <a href="${baseUrl}uniques?path=${requestScope.path}.uniques">Uniques</a>
                     </button>
                     <button class="btn btn-link" type="button">
-                        <a href="/references?path=${requestScope.path}.references">References</a>
+                        <a href="${baseUrl}references?path=${requestScope.path}.references">References</a>
                     </button>
                 </div>
             </div>

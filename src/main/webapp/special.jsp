@@ -2,20 +2,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="pac" uri="/WEB-INF/pac.tld" %>
 <c:set scope="request" var="target" value="${pac:read(sessionScope.json,requestScope.path)}"/>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<c:set var="baseUrl"
+       value='<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"%>'/>
 <html>
 <head>
     <title>PAC Workbench</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/bootstrap-tagsinput.css"/>
-    <link rel="stylesheet" href="/css/tree.css">
-    <script src="/js/jquery-3.1.1.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/validator.min.js"></script>
-    <script src="/js/bootstrap3-typeahead.min.js"></script>
-    <script src="/js/bootstrap-tagsinput.min.js"></script>
-    <script src="/js/jquery.form.min.js"></script>
-    <script src="/js/tree.js"></script>
+    <link rel="stylesheet" href="${baseUrl}css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="${baseUrl}css/bootstrap-tagsinput.css"/>
+    <link rel="stylesheet" href="${baseUrl}css/tree.css">
+    <script src="${baseUrl}js/jquery-3.1.1.min.js"></script>
+    <script src="${baseUrl}js/bootstrap.min.js"></script>
+    <script src="${baseUrl}js/validator.min.js"></script>
+    <script src="${baseUrl}js/bootstrap3-typeahead.min.js"></script>
+    <script src="${baseUrl}js/bootstrap-tagsinput.min.js"></script>
+    <script src="${baseUrl}js/jquery.form.min.js"></script>
+    <script src="${baseUrl}js/tree.js"></script>
 </head>
 <body>
 <div class="container">
@@ -25,7 +26,7 @@
     <div class="row">
         <ol class="breadcrumb">
             <li>
-                <a href="/project?path=${pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))}">${pac:read(sessionScope.json,pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))).name}</a>
+                <a href="${baseUrl}project?path=${pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))}">${pac:read(sessionScope.json,pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))).name}</a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -33,15 +34,15 @@
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a href="/envJtee?path=${pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))}.envJtee">
+                        <a href="${baseUrl}envJtee?path=${pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))}.envJtee">
                             J2EE Environment</a>
                     </li>
                     <li>
-                        <a href="/envAndroid?path=${pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))}.envAndroid">
+                        <a href="${baseUrl}envAndroid?path=${pac:parent(pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path)))))}.envAndroid">
                             Android Environment</a>
                     </li>
                     <li class="active">
-                        <a href="/modules?path=${pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path))))}">
+                        <a href="${baseUrl}modules?path=${pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path))))}">
                             Modules</a>
                     </li>
                 </ul>
@@ -58,7 +59,7 @@
                         <li<c:if
                                 test="${moduleStatus.index==pac:id(pac:parent(pac:parent(pac:parent(requestScope.path))))}">
                             class="active"</c:if>>
-                            <a href="/module?path=${pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path))))}[${moduleStatus.index}]">
+                            <a href="${baseUrl}module?path=${pac:parent(pac:parent(pac:parent(pac:parent(requestScope.path))))}[${moduleStatus.index}]">
                                 [${moduleStatus.index}] - ${module.id}</a>
                         </li>
                     </c:forEach>
@@ -70,15 +71,15 @@
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="active">
-                        <a href="/fields?path=${pac:parent(pac:parent(requestScope.path))}">
+                        <a href="${baseUrl}fields?path=${pac:parent(pac:parent(requestScope.path))}">
                             Fields</a>
                     </li>
                     <li>
-                        <a href="/uniques?path=${pac:parent(pac:parent(pac:parent(requestScope.path)))}.uniques">
+                        <a href="${baseUrl}uniques?path=${pac:parent(pac:parent(pac:parent(requestScope.path)))}.uniques">
                             Uniques</a>
                     </li>
                     <li>
-                        <a href="/references?path=${pac:parent(pac:parent(pac:parent(requestScope.path)))}.references">
+                        <a href="${baseUrl}references?path=${pac:parent(pac:parent(pac:parent(requestScope.path)))}.references">
                             References</a>
                     </li>
                 </ul>
@@ -93,7 +94,7 @@
                                var="field" varStatus="moduleStatus">
                         <li<c:if test="${moduleStatus.index==pac:id(pac:parent(requestScope.path))}">
                             class="active"</c:if>>
-                            <a href="/field?path=${pac:parent(pac:parent(requestScope.path))}[${moduleStatus.index}]">
+                            <a href="${baseUrl}field?path=${pac:parent(pac:parent(requestScope.path))}[${moduleStatus.index}]">
                                 [${moduleStatus.index}] - ${field.databaseColumn}</a>
                         </li>
                     </c:forEach>
@@ -105,11 +106,11 @@
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="active">
-                        <a href="/special?path=${requestScope.path}">
+                        <a href="${baseUrl}special?path=${requestScope.path}">
                             Special</a>
                     </li>
                     <li>
-                        <a href="/values?path=${pac:parent(requestScope.path)}.values">
+                        <a href="${baseUrl}values?path=${pac:parent(requestScope.path)}.values">
                             Values</a>
                     </li>
                 </ul>
@@ -266,14 +267,14 @@
 
         if ($("input[name=type]:checked").val() == "")
             $.get({
-                url: "/special/clear?path=${requestScope.path}",
+                url: "${baseUrl}special/clear?path=${requestScope.path}",
                 success: function (response) {
                     window.location.reload();
                 }
             });
         else
             $.ajax({
-                url: "/special?path=${requestScope.path}",
+                url: "${baseUrl}special?path=${requestScope.path}",
                 type: "PUT",
                 data: {
                     type: $("input[name=type]:checked").val(),
