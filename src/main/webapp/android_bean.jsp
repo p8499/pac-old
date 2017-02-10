@@ -11,6 +11,7 @@ package ${sessionScope.json.envAndroid.packageBean};
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import ${sessionScope.json.envAndroid.packageBase}.DefaultDateFormatter;
 import ${sessionScope.json.envAndroid.packageMask}.${module.androidMaskAlias};
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ${module.androidBeanAlias} implements Parcelable
@@ -51,7 +52,7 @@ public class ${module.androidBeanAlias} implements Parcelable
                 <c:when test="${field.javaType==\"Integer\"}">this.${field.databaseColumn}=in.readInt();</c:when>
                 <c:when test="${field.javaType==\"Double\"}">this.${field.databaseColumn}=in.Double();</c:when>
                 <c:when test="${field.javaType==\"String\"}">this.${field.databaseColumn}=in.readString();</c:when>
-                <c:when test="${field.javaType==\"java.util.Date\"}">try{this.${field.databaseColumn}=DefaultDateFormatter.parse(in.readString());}catch(ParseException e){e.printStackTrace();}</c:when></c:choose></c:forEach>
+                <c:when test="${field.javaType==\"java.util.Date\"}">this.${field.databaseColumn}=DefaultDateFormatter.parse(in.readString());</c:when></c:choose></c:forEach>
     }
     <c:forEach items="${module.fields}" var="field">
         public ${field.javaType} get${pac:upperFirst(field.databaseColumn)}()
