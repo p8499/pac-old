@@ -43,6 +43,11 @@ public class Util {
         return rt.toArray(new String[]{});
     }
 
+    public static String alias(String table) {
+        int dot = table.indexOf(".");
+        return dot > -1 ? table.substring(dot + 1) : table;
+    }
+
     public static Object read(Object doc, String path) {
         return JsonPath.read(doc, path);
     }

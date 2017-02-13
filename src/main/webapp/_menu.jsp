@@ -13,7 +13,7 @@
                    onclick="event.preventDefault();$.get({url:'${baseUrl}json/check',success:function(response){$('#check').modal('show');$('#check_span').text(response);}});">
                     Check</a></li>
             <li>
-                <a href="${baseUrl}json/build/db">Download Database Scripts (Future)</a>
+                <a href="${baseUrl}json/build/db">Download Database Scripts</a>
             </li>
             <li>
                 <a href="${baseUrl}json/build/jtee">Download J2EE Project</a>

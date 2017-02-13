@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping(value = "/db_view", produces = "text/html;charset=UTF-8")
-public class DbView {
+@RequestMapping(value = "/db_func/", produces = "text/html;charset=UTF-8")
+public class DbFunc {
     @RequestMapping(value = "/{d}", method = RequestMethod.GET)
     public String get(HttpSession session, HttpServletRequest request, HttpServletResponse response, @PathVariable Integer d) {
         request.setAttribute("dindex", d);
-        return "/db_view.jsp";
+        return "/db_func.jsp";
     }
 }

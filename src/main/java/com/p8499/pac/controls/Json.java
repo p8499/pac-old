@@ -58,10 +58,12 @@ public class Json {
         File folder = new File(FileUtils.getTempDirectory(), String.valueOf(System.currentTimeMillis()));
         Map project = (Map) request.getSession().getAttribute("json");
         Map envJtee = (Map) project.get("envJtee");
-        downloadSql(request, "db_tabl", folder, "", "db_tabl");
-        downloadSql(request, "db_view", folder, "", "db_view");
-        downloadBat(request, "db_install", folder, "", "install");
-        downloadBat(request, "db_uninstall", folder, "", "uninstall");
+        List<Map> datasources = (List) envJtee.get("datasources");
+        for (int d = 0; d < datasources.size(); d++) {
+            downloadSql(request, "db_tabl", d, folder, "", String.format("%s_db_tabl", datasources.get(d).get("id")));
+            downloadSql(request, "db_func", d, folder, "", String.format("%s_db_func", datasources.get(d).get("id")));
+            downloadSql(request, "db_view", d, folder, "", String.format("%s_db_view", datasources.get(d).get("id")));
+        }
         File zip = zip(folder.listFiles(), new File(folder, envJtee.get("app") + "_db.zip"));
         response.setHeader("Content-Disposition", String.format("attachment; filename=%s", zip.getName()));
         response.setContentLength((int) zip.length());
@@ -182,8 +184,8 @@ public class Json {
         FileUtils.writeStringToFile(file, fetch(new URL(strUrl), request.getHeader("Cookie")).trim(), "UTF-8");
     }
 
-    private static void downloadSql(HttpServletRequest request, String template, File folder, String pkg, String name) throws IOException {
-        String strUrl = String.format("%s://%s:%d%s/%s", request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), template);
+    private static void downloadSql(HttpServletRequest request, String template, Integer d, File folder, String pkg, String name) throws IOException {
+        String strUrl = String.format("%s://%s:%d%s/%s/%d", request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), template, d);
         File file = new File(new File(folder, pkg.replace(".", "/")), name + ".sql");
         if (!file.getParentFile().exists())
             file.getParentFile().mkdirs();

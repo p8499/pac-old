@@ -3,9 +3,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="pac" uri="/WEB-INF/pac.tld" %>
-<c:if test="${sessionScope.json.envJtee.databaseType==\"postgresql\"}">
+<c:set var="datasource" value="${pac:read(sessionScope.json.envJtee,String.format(\"$.datasources[%d]\",requestScope.dindex))}"/>
+<c:if test="${datasource.databaseType==\"postgresql\"}">
 set client_encoding=UTF8;
-<c:forEach items="${pac:read(sessionScope.json,\"$.modules[?(@.databaseTable!=@.databaseView)]\")}" var="module">
+<c:forEach items="${pac:read(sessionScope.json,String.format(\"$.modules[?(@.datasource=='%s'&&@.databaseTable!=@.databaseView)]\",datasource.id))}" var="module">
 /*id: ${module.id}
   description: ${module.description}
   comment: ${module.comment}
