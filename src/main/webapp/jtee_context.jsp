@@ -30,10 +30,11 @@
         <property name="basePackage" value="${sessionScope.json.envJtee.packageMapper}.${datasource.id}"/>
         <property name="sqlSessionFactoryBeanName" value="${datasource.id}_factory"/>
     </bean></c:forEach>
-    <%--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"--%>
-          <%--p:defaultEncoding="UTF-8" p:maxUploadSize="5400000"/>--%>
     <context:component-scan base-package="${sessionScope.json.envJtee.packageBase}">
         <context:exclude-filter type="regex" expression="${sessionScope.json.envJtee.packageMapper}.*"/>
     </context:component-scan>
     <mvc:annotation-driven enable-matrix-variables="true"/>
+    <task:executor id="executor" pool-size="3"/>
+    <task:scheduler id="scheduler" pool-size="3"/>
+    <task:annotation-driven scheduler="scheduler" executor="executor"/>
 </beans>
