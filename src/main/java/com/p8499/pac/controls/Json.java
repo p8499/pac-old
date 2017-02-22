@@ -83,7 +83,7 @@ public class Json {
         downloadGradle(request, "jtee_gradle", folder, "", "build");
         downloadXml(request, "jtee_web", new File(folder, "src/main/webapp/WEB-INF"), "", "web");
         downloadXml(request, "jtee_log4j2", new File(folder, "src/main/webapp/WEB-INF"), "", "log4j2");
-        downloadXml(request, "jtee_context", new File(folder, "src/main/webapp/WEB-INF"), "", "applicationContext");
+        downloadXml(request, "jtee_context", new File(folder, "src/main/webapp/WEB-INF"), "", "springContext");
         downloadXml(request, "jtee_mybatisconfig", new File(folder, "src/main/webapp/WEB-INF"), "", "mybatis-config");
         downloadProperties(request, "jtee_properties", new File(folder, "src/main/webapp/WEB-INF"), "", "database");
         downloadJava(request, "base_jtee_filter", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "FilterExpr");
