@@ -41,7 +41,7 @@
                 <c:when test="${field.javaType==\"String\"}">"${field.defaultValue}"</c:when></c:choose>;</c:forEach>
         <c:forEach items="${module.fields}" var="field">
             <c:if test="${field.javaType==\"java.util.Date\"}">@com.fasterxml.jackson.annotation.JsonFormat(timezone="${pac:gmt()}",pattern="yyyyMMddHHmmss")</c:if>
-            protected ${field.javaType} ${field.databaseColumn}=<c:choose><c:when test="${field.defaultValue!=\"\"}">DEFAULT${pac:upper(field.databaseColumn)}</c:when><c:otherwise>null</c:otherwise></c:choose>;</c:forEach>
+            protected ${field.javaType} ${field.databaseColumn}=<c:choose><c:when test="${field.defaultValue!=\"\"}">DEFAULT_${pac:upper(field.databaseColumn)}</c:when><c:otherwise>null</c:otherwise></c:choose>;</c:forEach>
         public ${module.jteeBeanAlias}
         (   <c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">
                 ${field.javaType} ${field.databaseColumn}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>
@@ -72,6 +72,25 @@
                     @javax.validation.constraints.Null(groups={Insert.class,Update.class})</c:when>
                 <c:when test="${field.special.type==\"next\"}">
                     @javax.validation.constraints.NotNull(groups={Update.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nonnull\"&&field.special.updateClass==\"nonnull\"}">
+                    @javax.validation.constraints.NotNull(groups={Insert.class,Update.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nonnull\"&&field.special.updateClass==\"nullable\"}">
+                    @javax.validation.constraints.NotNull(groups={Insert.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nonnull\"&&field.special.updateClass==\"null\"}">
+                    @javax.validation.constraints.NotNull(groups={Insert.class})
+                    @javax.validation.constraints.Null(groups={Update.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nullable\"&&field.special.updateClass==\"nonnull\"}">
+                    @javax.validation.constraints.NotNull(groups={Update.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nullable\"&&field.special.updateClass==\"nullable\"}"></c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nullable\"&&field.special.updateClass==\"null\"}">
+                    @javax.validation.constraints.Null(groups={Update.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"null\"&&field.special.updateClass==\"nonnull\"}">
+                    @javax.validation.constraints.Null(groups={Insert.class})
+                    @javax.validation.constraints.NotNull(groups={Update.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"null\"&&field.special.updateClass==\"nullable\"}">
+                    @javax.validation.constraints.Null(groups={Insert.class})</c:when>
+                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"null\"&&field.special.updateClass==\"null\"}">
+                    @javax.validation.constraints.Null(groups={Insert.class,Update.class})</c:when>
                 <c:otherwise>
                     @javax.validation.constraints.NotNull(groups={Insert.class,Update.class})</c:otherwise></c:choose>
                 <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial||!keys.containsKey(field.databaseColumn)}">

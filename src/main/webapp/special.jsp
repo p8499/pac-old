@@ -240,6 +240,57 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="radio">
+                                        <label>
+                                            <input name="type" type="radio" value="other" data-toggle="collapse"
+                                                   <c:if test="${requestScope.target.type==\"other\"}">checked</c:if>
+                                                   data-parent="#group"
+                                                   data-target="#other"/>Other
+                                        </label>
+                                    </div>
+                                </div>
+                                <div id="other"
+                                     class="panel-collapse collapse<c:if test="${requestScope.target.type==\"other\"}"> in</c:if>">
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label for="insertClass">Who provide the data for this field during HTTP POST?</label>
+                                            <select class="form-control" id="insertClass">
+                                                <option value="nonnull"
+                                                        <c:if test="${requestScope.target.insertClass==\"nonnull\"}">selected</c:if>>
+                                                    Client
+                                                </option>
+                                                <option value="nullable"
+                                                        <c:if test="${requestScope.target.insertClass==\"nullable\"}">selected</c:if>>
+                                                    Client / Server
+                                                </option>
+                                                <option value="null"
+                                                        <c:if test="${requestScope.target.insertClass==\"null\"}">selected</c:if>>
+                                                    Client should never provide data for this field
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="updateClass">Who provide the data for this field during HTTP PUT?</label>
+                                            <select class="form-control" id="updateClass">
+                                                <option value="nonnull"
+                                                        <c:if test="${requestScope.target.updateClass==\"nonnull\"}">selected</c:if>>
+                                                    Client
+                                                </option>
+                                                <option value="nullable"
+                                                        <c:if test="${requestScope.target.updateClass==\"nullable\"}">selected</c:if>>
+                                                    Client / Server
+                                                </option>
+                                                <option value="null"
+                                                        <c:if test="${requestScope.target.updateClass==\"null\"}">selected</c:if>>
+                                                    Client should never provide data for this field
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-ok"></span> Save
                         </button>
@@ -280,7 +331,9 @@
                     type: $("input[name=type]:checked").val(),
                     serial: $("#serial").is(":checked"),
                     scope: $("#scope").val(),
-                    func: $("#func").val()
+                    func: $("#func").val(),
+                    insertClass: $('#insertClass').val(),
+                    updateClass: $('#updateClass').val()
                 },
                 success: function (response) {
                     window.location.reload();

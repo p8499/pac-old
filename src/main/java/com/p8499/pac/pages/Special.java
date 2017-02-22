@@ -32,11 +32,16 @@ public class Special {
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public String update(HttpSession session, HttpServletRequest request, HttpServletResponse response, @RequestParam(required = true) String path, @RequestBody String body) throws UnsupportedEncodingException {
         Map target = (Map) Util.read(request.getSession().getAttribute("json"), path);
+        target.clear();
         target.put("type", Util.extract(body, "type"));
         if (target.get("type").equals("next"))
             target.put("scope", Configuration.defaultConfiguration().jsonProvider().parse(Util.wrap(((String) Util.extract(body, "scope")).split(","))));
-        if (target.get("type").equals("view"))
+        else if (target.get("type").equals("view"))
             target.put("func", Util.extract(body, "func"));
+        else if (target.get("type").equals("other")) {
+            target.put("insertClass", Util.extract(body, "insertClass"));
+            target.put("updateClass", Util.extract(body, "updateClass"));
+        }
         return "";
     }
 }
