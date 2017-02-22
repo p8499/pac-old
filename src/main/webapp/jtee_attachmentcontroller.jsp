@@ -43,7 +43,7 @@
     @RequestMapping(value="${module.jteeAttachmentControllerPath}")
     public class ${module.jteeAttachmentControllerAlias} implements ApplicationContextAware
     {   @RequestMapping(value="<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>",method=RequestMethod.GET,produces="application/octet-stream")
-        public void downloadAttach(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required=true) String name) throws IOException
+        public void downloadAttach(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required=true) String name) throws Exception
         {   ${module.jteeBeanAlias} keyBean=new ${module.jteeBeanAlias}()<c:forEach items="${keys}" var="keyItem">.set${pac:upperFirst(keyItem.key)}(${keyItem.key})</c:forEach>;
             if(configurator==null||!configurator.beforeDownloadAttach(session,request,response,keyBean,name))
             {   response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -64,7 +64,7 @@
             response.setStatus(file.exists()?HttpServletResponse.SC_OK:HttpServletResponse.SC_NOT_FOUND);
         }
         @RequestMapping(value="<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>",method=RequestMethod.PUT,produces="application/json;charset=UTF-8")
-        public void uploadAttach(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required = true) String name) throws IOException
+        public void uploadAttach(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required = true) String name) throws Exception
         {   byte[] bytes=StreamUtils.copyToByteArray(request.getInputStream());
             ${module.jteeBeanAlias} keyBean=new ${module.jteeBeanAlias}()<c:forEach items="${keys}" var="keyItem">.set${pac:upperFirst(keyItem.key)}(${keyItem.key})</c:forEach>;
             if(configurator==null||!configurator.beforeUploadAttach(session,request,response,keyBean,name,bytes))
@@ -80,7 +80,7 @@
             response.setStatus(HttpServletResponse.SC_OK);
         }
         @RequestMapping(value="<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>",method=RequestMethod.DELETE,produces="application/json;charset=UTF-8")
-        public String deleteAttach(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required=true) String name)
+        public String deleteAttach(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required=true) String name) throws Exception
         {   ${module.jteeBeanAlias} keyBean=new ${module.jteeBeanAlias}()<c:forEach items="${keys}" var="keyItem">.set${pac:upperFirst(keyItem.key)}(${keyItem.key})</c:forEach>;
             if(configurator==null||!configurator.beforeDeleteAttach(session,request,response,keyBean,name))
             {   response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -97,7 +97,7 @@
             return String.valueOf(result);
         }
         @RequestMapping(value="<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>",method=RequestMethod.GET,produces="application/json;charset=UTF-8")
-        public String listAttaches(HttpSession session,HttpServletRequest request,HttpServletResponse response<c:forEach items="${keys}" var="keyItem">,@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn}</c:forEach>) throws JsonProcessingException
+        public String listAttaches(HttpSession session,HttpServletRequest request,HttpServletResponse response<c:forEach items="${keys}" var="keyItem">,@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn}</c:forEach>) throws Exception
         {   ${module.jteeBeanAlias} keyBean=new ${module.jteeBeanAlias}()<c:forEach items="${keys}" var="keyItem">.set${pac:upperFirst(keyItem.key)}(${keyItem.key})</c:forEach>;
             if (configurator==null||!configurator.beforeListAttaches(session,request,response,keyBean))
             {   response.setStatus(HttpServletResponse.SC_FORBIDDEN);

@@ -46,7 +46,7 @@
          *   ${sessionScope.json.envJtee.baseUrl}${module.jteeControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>?mask={<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">"${field.databaseColumn}":true<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>}
          */
         @RequestMapping(value="<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>",method=RequestMethod.GET)
-        public String get(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required=false) String mask) throws IOException
+        public String get(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestParam(required=false) String mask) throws Exception
         {   ${module.jteeMaskAlias} maskObj=mask==null?new ${module.jteeMaskAlias}().all(true):jackson.readValue(mask,${module.jteeMaskAlias}.class);
             if(configurator!=null&&!configurator.beforeGet(session,request,response,new ${module.jteeBeanAlias}()<c:forEach items="${keys}" var="keyItem">.set${pac:upperFirst(keyItem.key)}(${keyItem.key})</c:forEach>,maskObj))
             {   response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -73,7 +73,7 @@
          *   {<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">"${keyItem.key}":{${keyItem.key}}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>,</c:if><c:forEach items="${nonkeys}" var="fieldItem" varStatus="fieldStatus">"${fieldItem.key}":{${fieldItem.key}}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>}
          */
         @RequestMapping(method=RequestMethod.POST)
-        public String add(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>@RequestBody ${module.jteeBeanAlias} bean) throws JsonProcessingException
+        public String add(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>@RequestBody ${module.jteeBeanAlias} bean) throws Exception
         {   <c:forEach items="${module.fields}" var="field">
                 <c:choose><c:when test="${field.special.type==\"password\"}">
                     bean.set${pac:upperFirst(field.databaseColumn)}(org.apache.commons.codec.digest.DigestUtils.md5Hex(bean.get${pac:upperFirst(field.databaseColumn)}()));</c:when><c:when test="${field.special.type==\"next\"}">if(bean.get${pac:upperFirst(field.databaseColumn)}()==null)bean.set${pac:upperFirst(field.databaseColumn)}(${pac:lowerFirst(module.jteeMapperAlias)}.next${pac:upperFirst(field.databaseColumn)}(<c:forEach items="${field.special.scope}" var="scopeColumn" varStatus="scopeColumnStatus">
@@ -112,7 +112,7 @@
          *   {<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">"${field.databaseColumn}":true<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>}
          */
         @RequestMapping(value="<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>",method=RequestMethod.PUT)
-        public String update(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestBody ${module.jteeBeanAlias} bean,@RequestParam(required=false) String mask) throws IOException
+        public String update(HttpSession session,HttpServletRequest request,HttpServletResponse response,<c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@RequestBody ${module.jteeBeanAlias} bean,@RequestParam(required=false) String mask) throws Exception
         {   ${module.jteeMaskAlias} maskObj=mask==null?new ${module.jteeMaskAlias}().all(true):jackson.readValue(mask,${module.jteeMaskAlias}.class);
             <c:forEach items="${module.fields}" var="field">
                 <c:choose><c:when test="${field.special.type==\"password\"}">
@@ -149,7 +149,7 @@
          *   Cache-Control:no-cache
          */
         @RequestMapping(value="<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>",method=RequestMethod.DELETE)
-        public String delete(HttpSession session,HttpServletRequest request,HttpServletResponse response<c:forEach items="${keys}" var="keyItem">,@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn}</c:forEach>) throws JsonProcessingException
+        public String delete(HttpSession session,HttpServletRequest request,HttpServletResponse response<c:forEach items="${keys}" var="keyItem">,@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn}</c:forEach>) throws Exception
         {   if(configurator==null||!configurator.beforeDelete(session,request,response,new ${module.jteeBeanAlias}()<c:forEach items="${keys}" var="keyItem">.set${pac:upperFirst(keyItem.key)}(${keyItem.key})</c:forEach>))
             {   response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 return "";
@@ -175,7 +175,7 @@
          *   mask={<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">"${field.databaseColumn}":true<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>}
          */
         @RequestMapping(method=RequestMethod.GET)
-        public String query(HttpSession session,HttpServletRequest request,HttpServletResponse response,@RequestParam(required=false) String filter,@RequestParam(required=false) String orderBy,@RequestHeader(required=false,name="Range",defaultValue="items=0-9") String range,@RequestParam(required=false) String mask) throws IOException
+        public String query(HttpSession session,HttpServletRequest request,HttpServletResponse response,@RequestParam(required=false) String filter,@RequestParam(required=false) String orderBy,@RequestHeader(required=false,name="Range",defaultValue="items=0-9") String range,@RequestParam(required=false) String mask) throws Exception
         {   ${module.jteeMaskAlias} maskObj=mask==null||mask.equals("")?new ${module.jteeMaskAlias}().all(true):jackson.readValue(mask,${module.jteeMaskAlias}.class);
             FilterExpr filterObj=filter==null||filter.equals("")?null:jackson.readValue(filter,FilterExpr.class);
             OrderByListExpr orderByListObj=mask==null||mask.equals("")?null:OrderByListExpr.fromQuery(orderBy);
