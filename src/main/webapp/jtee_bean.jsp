@@ -33,18 +33,27 @@
                     <c:when test="${field.javaType==\"Double\"}">${value.value}</c:when>
                     <c:when test="${field.javaType==\"String\"}">"${value.value}"</c:when></c:choose>
                 ;</c:forEach></c:forEach>
+        <c:forEach items="${pac:read(module,\"$.fields[?(@.defaultValue!='')]\")}" var="field">
+            public static final ${field.javaType} ${pac:upper(field.databaseColumn)}_DEFAULT=
+            <c:choose>
+                <c:when test="${field.javaType==\"Integer\"}">${field.defaultValue}</c:when>
+                <c:when test="${field.javaType==\"Double\"}">${field.defaultValue}</c:when>
+                <c:when test="${field.javaType==\"String\"}">"${field.defaultValue}"</c:when></c:choose>;</c:forEach>
         <c:forEach items="${module.fields}" var="field">
             <c:if test="${field.javaType==\"java.util.Date\"}">@com.fasterxml.jackson.annotation.JsonFormat(timezone="${pac:gmt()}",pattern="yyyyMMddHHmmss")</c:if>
-            protected ${field.javaType} ${field.databaseColumn}=null;</c:forEach>
+            protected ${field.javaType} ${field.databaseColumn}=<c:choose><c:when test="${field.defaultValue!=\"\"}">${pac:upper(field.databaseColumn)}_DEFAULT</c:when><c:otherwise>null</c:otherwise></c:choose>;</c:forEach>
         public ${module.jteeBeanAlias}
         (   <c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">
                 ${field.javaType} ${field.databaseColumn}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>
         )
         {   <c:forEach items="${module.fields}" var="field">
-                this.${field.databaseColumn}=${field.databaseColumn};</c:forEach>
+                if(${field.databaseColumn}!=null)
+                    this.${field.databaseColumn}=${field.databaseColumn};</c:forEach>
         }
         public ${module.jteeBeanAlias}()
-        {
+        {   this(
+                <c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">
+                    null<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>);
         }
         public ${module.jteeBeanAlias} clone()
         {	return new ${module.jteeBeanAlias}
