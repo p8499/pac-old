@@ -10,7 +10,11 @@ set client_encoding=UTF8;
 /*module: ${module.description}
   field: ${field.description}
  */
-CREATE OR REPLACE FUNCTION ${pac:upper(module.databaseView)}_${pac:upper(field.databaseColumn)}(${pac:alias(module.databaseTable)}) RETURNS INT AS $$
+CREATE OR REPLACE FUNCTION ${module.databaseView}_${pac:upper(field.databaseColumn)}(${pac:alias(module.databaseTable)}) RETURNS <c:choose><c:when test="${field.javaType==\"Integer\"}">
+    ${field.integerLength<5?"SMALLINT":field.integerLength<9?"INTEGER":"BIGINT"}</c:when><c:when test="${field.javaType==\"String\"}">
+    VARCHAR</c:when><c:when test="${field.javaType==\"Double\"}">
+    DECIMAL</c:when><c:when test="${field.javaType==\"java.util.Date\"}">
+    TIMESTAMP</c:when></c:choose> AS $$
 DECLARE
 	/*Please edit declaration*/
 BEGIN

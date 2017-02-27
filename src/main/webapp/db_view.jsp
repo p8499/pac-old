@@ -12,8 +12,8 @@ set client_encoding=UTF8;
   comment: ${module.comment}
  */
 create view ${module.databaseView} as
-select *,<c:forEach items="${pac:read(module,\"$.fields[?(@.special.type=='view')]\")}" var="field" varStatus="fieldStatus">
-${field.special.func}(t) ${pac:upper(field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>
+select *,<c:forEach items="${pac:read(module,\"$.fields[?(@.source=='view')]\")}" var="field" varStatus="fieldStatus">
+${module.databaseView}_${pac:upper(field.databaseColumn)}(t) ${pac:upper(field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>
 from ${module.databaseTable} t;
 </c:forEach>
 </c:if>

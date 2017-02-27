@@ -12,13 +12,13 @@ set client_encoding=UTF8;
   description: ${module.description}
   comment: ${module.comment}
  */
-create table ${module.databaseTable}(<c:forEach items="${pac:read(module,\"$.fields[?(@.special.type!='view')]\")}" var="field" varStatus="fieldStatus">
+create table ${module.databaseTable}(<c:forEach items="${pac:read(module,\"$.fields[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">
     /*${field.description}*/<c:choose><c:when test="${keys.containsKey(field.databaseColumn)&&pac:read(module,\"uniques[?(@.key)]\")[0].serial}">
-    ${pac:upper(pac:upper(field.databaseColumn))} SERIAL NOT NULL</c:when><c:when test="${field.javaType==\"Integer\"}">
-    ${pac:upper(pac:upper(field.databaseColumn))} ${field.integerLength<5?"SMALLINT":field.integerLength<9?"INTEGER":"BIGINT"} NOT NULL</c:when><c:when test="${field.javaType==\"String\"}">
-    ${pac:upper(pac:upper(field.databaseColumn))} VARCHAR(${field.stringLength}) NOT NULL</c:when><c:when test="${field.javaType==\"Double\"}">
-    ${pac:upper(pac:upper(field.databaseColumn))} DECIMAL(${field.integerLength+field.fractionLength},${field.fractionLength}) NOT NULL</c:when><c:when test="${field.javaType==\"java.util.Date\"}">
-    ${pac:upper(pac:upper(field.databaseColumn))} TIMESTAMP NOT NULL</c:when></c:choose><c:if test="${!fieldStatus.last}">,</c:if></c:forEach>
+    ${pac:upper(pac:upper(field.databaseColumn))} SERIAL<c:if test="${field.notnull}"> NOT NULL</c:if></c:when><c:when test="${field.javaType==\"Integer\"}">
+    ${pac:upper(pac:upper(field.databaseColumn))} ${field.integerLength<5?"SMALLINT":field.integerLength<9?"INTEGER":"BIGINT"}<c:if test="${field.notnull}"> NOT NULL</c:if></c:when><c:when test="${field.javaType==\"String\"}">
+    ${pac:upper(pac:upper(field.databaseColumn))} VARCHAR(${field.stringLength})<c:if test="${field.notnull}"> NOT NULL</c:if></c:when><c:when test="${field.javaType==\"Double\"}">
+    ${pac:upper(pac:upper(field.databaseColumn))} DECIMAL(${field.integerLength+field.fractionLength},${field.fractionLength})<c:if test="${field.notnull}"> NOT NULL</c:if></c:when><c:when test="${field.javaType==\"java.util.Date\"}">
+    ${pac:upper(pac:upper(field.databaseColumn))} TIMESTAMP<c:if test="${field.notnull}"> NOT NULL</c:if></c:when></c:choose><c:if test="${!fieldStatus.last}">,</c:if></c:forEach>
 );
 ALTER TABLE ${module.databaseTable} ADD CONSTRAINT ${pac:upper(module.id)}_PRIMARY PRIMARY KEY (<c:forEach items="${keys}" var="keyItem">${pac:upper(keyItem.key)}</c:forEach>);<c:forEach items="${module.uniques}" var="unique" varStatus="uniqueStatus">
 ALTER TABLE ${module.databaseTable} ADD CONSTRAINT ${pac:upper(module.id)}_UNIQUE_${uniqueStatus.index} UNIQUE (${pac:join(",",pac:upper(unique.items))});</c:forEach><c:forEach items="${module.references}" var="reference" varStatus="referenceStatus">
