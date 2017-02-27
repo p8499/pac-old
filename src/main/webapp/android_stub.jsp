@@ -41,7 +41,11 @@ import ${sessionScope.json.envAndroid.packageBean}.${module.androidBeanAlias};
 import ${sessionScope.json.envAndroid.packageMask}.${module.androidMaskAlias};
 
 public class ${module.androidStubAlias}
-{   private static ${module.androidStubAlias} service;
+{   public static final String path = "${module.jteeControllerPath}";
+    public static final String attachPath = "${module.jteeAttachmentControllerPath}";
+    public static final String pathKey = "<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>";
+
+    private static ${module.androidStubAlias} service;
     public static ${module.androidStubAlias} getInstance(Context context)
     {   if(service==null)
         {   service=new ${module.androidStubAlias}(context);
@@ -138,25 +142,25 @@ public class ${module.androidStubAlias}
         return flowable;
     }
     public interface Api
-    {   @GET("${module.jteeControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
+    {   @GET(path+pathKey)
         Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} get(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("mask") String mask);
-        @POST("${module.jteeControllerPath}<c:if test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach></c:if>")
+        @POST(path<c:if test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}">+pathKey</c:if>)
         Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} add(<c:if test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>@Body String bean);
-        @PUT("${module.jteeControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
+        @PUT(path+pathKey)
         Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} update(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Body String bean,@Query("mask") String mask);
-        @DELETE("${module.jteeControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
+        @DELETE(path+pathKey)
         Flowable${"<"}Response${"<"}Void${">"}${">"} delete(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
-        @GET("${module.jteeControllerPath}")
+        @GET(path)
         Flowable${"<"}Response${"<"}List${"<"}${module.androidBeanAlias}${">"}${">"}${">"} query(@Query("filter") String filter,@Query("orderBy") String orderBy,@Header("Range") String range,@Query("mask") String mask);
-        @GET("${module.jteeControllerPath}")
+        @GET(path)
         Flowable${"<"}Response${"<"}Void${">"}${">"} count(@Query("filter") String filter,@Header("Range") String range,@Query("mask") String mask);
-        @GET("${module.jteeAttachmentControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
+        @GET(attachPath+pathKey)
         Flowable${"<"}Response${"<"}ResponseBody${">"}${">"} downloadAttach(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("name") String name,@Header("Accept") String accept);
-        @PUT("${module.jteeAttachmentControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
+        @PUT(attachPath+pathKey)
         Flowable${"<"}Response${"<"}Void${">"}${">"} uploadAttach(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("name") String name,@Body RequestBody body);
-        @DELETE("${module.jteeAttachmentControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
+        @DELETE(attachPath+pathKey)
         Flowable${"<"}Response${"<"}Void${">"}${">"} deleteAttach(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("name") String name);
-        @GET("${module.jteeAttachmentControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
+        @GET(attachPath+pathKey)
         Flowable${"<"}Response${"<"}List${"<"}String${">"}${">"}${">"} listAttaches(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
     }
 }
