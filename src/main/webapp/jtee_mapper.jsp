@@ -49,7 +49,7 @@
 
         <c:choose>
             <c:when test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}">
-                @Insert("INSERT INTO ${module.databaseTable} (<c:forEach items="${nonkeys}" var="fieldItem" varStatus="fieldStatus">${pac:upper(fieldItem.key)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>) VALUES (<c:forEach items="${nonkeys}" var="fieldItem" varStatus="fieldStatus">${String.format("#{bean.%s}",fieldItem.key)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")
+                @Insert("INSERT INTO ${module.databaseTable} (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${pac:upper(field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>) VALUES (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")
                 @org.apache.ibatis.annotations.Options(useGeneratedKeys=true,keyProperty="bean.${pac:read(module,"uniques[?(@.key)]")[0][0]}")</c:when>
             <c:otherwise>
                 @Insert("INSERT INTO ${module.databaseTable} (${pac:join(",",pac:upper(pac:read(module.fields,"$..databaseColumn")))}) VALUES (<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")</c:otherwise></c:choose>
@@ -58,17 +58,17 @@
         @Update("${'<script>'}"
             + "<choose>"
             + "<when test='mask!=null'>"
-            + "<if test='<c:forEach items="${nonkeys}" var="fieldItem" varStatus="fieldStatus">mask.${fieldItem.key}<c:if test="${!fieldStatus.last}"> or </c:if></c:forEach>'>"
+            + "<if test='<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">mask.${field.databaseColumn}<c:if test="${!fieldStatus.last}"> or </c:if></c:forEach>'>"
             + "UPDATE ${module.databaseTable} "
             + "<set>"
-            <c:forEach items="${nonkeys}" var="fieldItem">
-                + "<if test='mask.${fieldItem.key}'>${pac:upper(fieldItem.key)}=${String.format("#{bean.%s}",fieldItem.key)}, </if>"</c:forEach>
+            <c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field">
+                + "<if test='mask.${field.databaseColumn}'>${pac:upper(field.databaseColumn)}=${String.format("#{bean.%s}",field.databaseColumn)}, </if>"</c:forEach>
             + "</set>"
             + "WHERE <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${pac:upper(keyItem.key)}=${String.format("#{bean.%s}",keyItem.key)}<c:if test="${!keyStatus.last}"> AND </c:if></c:forEach>"
             + "</if>"
             + "</when>"
             + "<otherwise>"
-            + "UPDATE ${module.databaseTable} SET <c:forEach items="${nonkeys}" var="fieldItem" varStatus="fieldStatus">${String.format("%s=#{bean.%s}",pac:upper(fieldItem.key),fieldItem.key)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach> WHERE <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${pac:upper(keyItem.key)}=${String.format("#{bean.%s}",keyItem.key)}<c:if test="${!keyStatus.last}"> AND </c:if></c:forEach>"
+            + "UPDATE ${module.databaseTable} SET <c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${String.format("%s=#{bean.%s}",pac:upper(field.databaseColumn),field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach> WHERE <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${pac:upper(keyItem.key)}=${String.format("#{bean.%s}",keyItem.key)}<c:if test="${!keyStatus.last}"> AND </c:if></c:forEach>"
             + "</otherwise>"
             + "</choose>"
             + "${'</script>'}")
@@ -123,6 +123,7 @@
             + "${'</script>'}")
         public long count(@Param("filter")String filter);
 
+<%--
         <c:forEach items="${pac:read(module,\"$.fields[?(@.special.type=='next')]\")}" var="field">
             @Select("SELECT COALESCE(MAX(${pac:upper(field.databaseColumn)}),0)+1 FROM ${module.databaseView} WHERE <c:forEach items="${field.special.scope}" var="scopeColumn" varStatus="fieldStatus">${String.format("%s=#{%s}",scopeColumn,scopeColumn)}<c:if test="${!fieldStatus.last}"> AND </c:if></c:forEach>")
             public ${field.javaType} next${pac:upperFirst(field.databaseColumn)}
@@ -130,7 +131,6 @@
                     @Param("${scopeColumn}") ${pac:read(module,String.format("$.fields[?(@.databaseColumn=='%s')]",scopeColumn))[0].javaType} ${scopeColumn}
                     <c:if test="${!scopeColumnStatus.last}">,</c:if></c:forEach>
             );</c:forEach>
-<%--
         <c:choose>
             <c:when test="${!empty module.uniques}">
                 @Select("${'<script>'}"

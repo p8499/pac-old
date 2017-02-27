@@ -25,7 +25,8 @@
             </a>
             <div class="list-group collapse ${requestScope.path.indexOf("$.envJtee.datasources")>=0?"in":""}"
                  id="envJtee_datasources">
-                <c:forEach items="${sessionScope.json.envJtee.datasources}" var="datasource" varStatus="datasourceStatus">
+                <c:forEach items="${sessionScope.json.envJtee.datasources}" var="datasource"
+                           varStatus="datasourceStatus">
                     <a class="list-group-item ${requestScope.path==String.format("$.envJtee.datasources[%s]",datasourceStatus.index)?"active":""}"
                        href="${baseUrl}datasource?path=$.envJtee.datasources[${datasourceStatus.index}]">
                         <i class="glyphicon glyphicon-minus"></i>
@@ -73,11 +74,6 @@
                             </a>
                             <div class="list-group collapse ${requestScope.path.indexOf(String.format("$.modules[%d].fields[%d]",moduleStatus.index,fieldStatus.index))>=0?"in":""}"
                                  id="modules_${moduleStatus.index}_fields_${fieldStatus.index}">
-                                <a class="list-group-item ${requestScope.path==String.format("$.modules[%d].fields[%d].special",moduleStatus.index,fieldStatus.index)?"active":""}"
-                                   href="${baseUrl}special?path=$.modules[${moduleStatus.index}].fields[${fieldStatus.index}].special">
-                                    <i class="glyphicon glyphicon-minus"></i>
-                                    Special
-                                </a>
                                 <a class="list-group-item ${requestScope.path==String.format("$.modules[%d].fields[%d].values",moduleStatus.index,fieldStatus.index)?"active":""}"
                                    href="${baseUrl}values?path=$.modules[${moduleStatus.index}].fields[${fieldStatus.index}].values">
                                     <i class="glyphicon ${requestScope.path.indexOf(String.format("$.modules[%d].fields[%d].values",moduleStatus.index,fieldStatus.index))>=0?"glyphicon-chevron-down":"glyphicon-chevron-right"}"

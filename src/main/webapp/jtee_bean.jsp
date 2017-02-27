@@ -68,42 +68,24 @@
                     @javax.validation.constraints.NotNull(groups={Update.class})</c:when>
                 <c:when test="${keys.containsKey(field.databaseColumn)}">
                     @javax.validation.constraints.NotNull(groups={Insert.class,Update.class})</c:when>
-                <c:when test="${field.special.type==\"view\"}">
-                    @javax.validation.constraints.Null(groups={Insert.class,Update.class})</c:when>
-                <c:when test="${field.special.type==\"next\"}">
-                    @javax.validation.constraints.NotNull(groups={Update.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nonnull\"&&field.special.updateClass==\"nonnull\"}">
+                <c:when test="${field.source==\"table\"&&field.notnull}">
                     @javax.validation.constraints.NotNull(groups={Insert.class,Update.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nonnull\"&&field.special.updateClass==\"nullable\"}">
-                    @javax.validation.constraints.NotNull(groups={Insert.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nonnull\"&&field.special.updateClass==\"null\"}">
-                    @javax.validation.constraints.NotNull(groups={Insert.class})
-                    @javax.validation.constraints.Null(groups={Update.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nullable\"&&field.special.updateClass==\"nonnull\"}">
-                    @javax.validation.constraints.NotNull(groups={Update.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nullable\"&&field.special.updateClass==\"nullable\"}"></c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"nullable\"&&field.special.updateClass==\"null\"}">
-                    @javax.validation.constraints.Null(groups={Update.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"null\"&&field.special.updateClass==\"nonnull\"}">
-                    @javax.validation.constraints.Null(groups={Insert.class})
-                    @javax.validation.constraints.NotNull(groups={Update.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"null\"&&field.special.updateClass==\"nullable\"}">
-                    @javax.validation.constraints.Null(groups={Insert.class})</c:when>
-                <c:when test="${field.special.type==\"other\"&&field.special.insertClass==\"null\"&&field.special.updateClass==\"null\"}">
+                <c:when test="${field.source==\"table\"}">
+                    </c:when>
+                <c:when test="${field.source==\"view\"}">
                     @javax.validation.constraints.Null(groups={Insert.class,Update.class})</c:when>
-                <c:otherwise>
-                    @javax.validation.constraints.NotNull(groups={Insert.class,Update.class})</c:otherwise></c:choose>
-                <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial||!keys.containsKey(field.databaseColumn)}">
-                    <c:choose>
-                        <c:when test="${field.javaType==\"Integer\"}">
-                            @javax.validation.constraints.Min(value=${String.format("%.0f",-Math.pow(10,field.integerLength))})
-                            @javax.validation.constraints.Max(value=${String.format("%.0f",Math.pow(10,field.integerLength))})</c:when>
-                        <c:when test="${field.javaType==\"Double\"}">
-                            @javax.validation.constraints.Digits(integer=${field.integerLength},fraction={field.fractionLength})</c:when>
-                        <c:when test="${field.javaType==\"String\"}">
-                            @javax.validation.constraints.Size(max=${field.stringLength})</c:when>
-                    </c:choose>
-                </c:if>
+            </c:choose>
+            <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial||!keys.containsKey(field.databaseColumn)}">
+                <c:choose>
+                    <c:when test="${field.javaType==\"Integer\"}">
+                        @javax.validation.constraints.Min(value=${String.format("%.0f",-Math.pow(10,field.integerLength))})
+                        @javax.validation.constraints.Max(value=${String.format("%.0f",Math.pow(10,field.integerLength))})</c:when>
+                    <c:when test="${field.javaType==\"Double\"}">
+                        @javax.validation.constraints.Digits(integer=${field.integerLength},fraction={field.fractionLength})</c:when>
+                    <c:when test="${field.javaType==\"String\"}">
+                        @javax.validation.constraints.Size(max=${field.stringLength})</c:when>
+                </c:choose>
+            </c:if>
             public ${field.javaType} get${pac:upperFirst(field.databaseColumn)}()
             {   return ${field.databaseColumn};
             }

@@ -98,15 +98,22 @@
                         <tbody>
                         <c:forEach items="${requestScope.target}" var="field" varStatus="moduleStatus">
                             <tr>
-                                <td><span class="col-sm-2">
-                            <a href="${baseUrl}field?path=${requestScope.path}[${moduleStatus.index}]">${field.databaseColumn}</a></span>
+                                <td><span class="col-sm-3">
+                            <a href="${baseUrl}field?path=${requestScope.path}[${moduleStatus.index}]">
+                                <c:choose>
+                                    <c:when test="${field.source=='table'}">${pac:read(sessionScope.json, pac:parent(requestScope.path)).databaseTable}</c:when>
+                                    <c:when test="${field.source=='view'}">${pac:read(sessionScope.json, pac:parent(requestScope.path)).databaseView}</c:when></c:choose>
+                                    .${field.databaseColumn}</a></span>
                                     <span class="col-sm-2">${field.description}</span>
-                                    <span class="col-sm-3">${field.javaType}
+                                    <span class="col-sm-2">${field.javaType}
                                         <c:choose>
                                             <c:when test="${field.javaType==\"Integer\"}">(${field.integerLength})</c:when>
                                             <c:when test="${field.javaType==\"Double\"}">(${field.integerLength},${field.fractionLength})</c:when>
                                             <c:when test="${field.javaType==\"String\"}">(${field.stringLength})</c:when></c:choose></span>
-                                    <span class="col-sm-2">${pac:upperFirst(field.special.type)}</span>
+                                    <span class="col-sm-2">
+                                    <c:choose>
+                                        <c:when test="${field.source=='table'&&field.notnull}">Not Null</c:when>
+                                        <c:when test="${field.source=='table'&&!field.notnull}">Null</c:when></c:choose></span>
                                     <span class="col-sm-3">
                                 <button type="button"
                                         class="btn btn-default<c:if test="${moduleStatus.first}"> disabled</c:if>"
@@ -141,12 +148,28 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form data-toggle="validator"
-                      onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}fields?path=${requestScope.path}',type:'POST',data:{databaseColumn:$('#databaseColumn').val(),description:$('#description').val(),javaType:$('#javaType').val(),stringLength:$('#stringLength').val(),integerLength:$('#integerLength').val(),fractionLength:$('#fractionLength').val(),defaultValue:$('#defaultValue').val()},success:function(response){window.location.reload();}});">
+                      onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}fields?path=${requestScope.path}',type:'POST',data:{source:$('#source').val(),notnull: $('#notnull').is(':checked'),databaseColumn:$('#databaseColumn').val(),description:$('#description').val(),javaType:$('#javaType').val(),stringLength:$('#stringLength').val(),integerLength:$('#integerLength').val(),fractionLength:$('#fractionLength').val(),defaultValue:$('#defaultValue').val()},success:function(response){window.location.reload();}});">
                     <div class="modal-header">
                         <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="post_label">Add a New Field</h4>
                     </div>
                     <div class="modal-body">
+                        <div class="form-group">
+                            <label for="source">Source</label>
+                            <select class="form-control" id="source" onchange="onSourceChange();">
+                                <option value="table">
+                                    Table - ${pac:read(sessionScope.json,pac:parent(requestScope.path)).databaseTable}
+                                </option>
+                                <option value="view">
+                                    View - ${pac:read(sessionScope.json,pac:parent(requestScope.path)).databaseView}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input id="notnull" type="checkbox" checked/>Not Null
+                            </label>
+                        </div>
                         <div class="form-group">
                             <label for="databaseColumn">Database Column</label>
                             <input class="form-control" id="databaseColumn" type="text"
@@ -196,6 +219,15 @@
     </div>
 </div>
 <script>
+    window.onSourceChange = function () {
+        if ($("#source").val() == "table") {
+            $("#notnull").removeAttr("disabled");
+        }
+        else if ($("#source").val() == "view") {
+            $("#notnull").removeAttr("checked");
+            $("#notnull").attr("disabled", "disabled");
+        }
+    };
     window.onJavaTypeChange = function () {
         if ($("#javaType").val() == "String") {
             $("#stringLength").removeAttr("disabled");
@@ -239,6 +271,7 @@
             $("#defaultValue").removeAttr("step");
         }
     };
+    onSourceChange();
     onJavaTypeChange();
 </script>
 </body>

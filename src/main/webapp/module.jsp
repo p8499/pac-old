@@ -70,7 +70,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form data-toggle="validator"
-                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}module?path=${requestScope.path}',type:'PUT',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#jteeBeanAlias').val(),jteeMaskAlias:$('#jteeMaskAlias').val(),jteeMapperAlias:$('#jteeMapperAlias').val(),jteeConfiguratorAlias:$('#jteeConfiguratorAlias').val(),jteeExecutorAlias:$('#jteeExecutorAlias').val(),jteeControllerAlias:$('#jteeControllerAlias').val(),jteeControllerPath:$('#jteeControllerPath').val(),jteeAttachmentControllerAlias:$('#jteeAttachmentControllerAlias').val(),jteeAttachmentControllerPath:$('#jteeAttachmentControllerPath').val(),androidBeanAlias:$('#androidBeanAlias').val(),androidMaskAlias:$('#androidMaskAlias').val(),androidStubAlias:$('#androidStubAlias').val()},success:function(response){window.location.reload();}});">
+                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}module?path=${requestScope.path}',type:'PUT',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#jteeBeanAlias').val(),jteeMaskAlias:$('#jteeMaskAlias').val(),jteeMapperAlias:$('#jteeMapperAlias').val(),jteeControllerBaseAlias:$('#jteeControllerBaseAlias').val(),jteeControllerPath:$('#jteeControllerPath').val(),jteeAttachmentControllerPath:$('#jteeAttachmentControllerPath').val(),androidBeanAlias:$('#androidBeanAlias').val(),androidMaskAlias:$('#androidMaskAlias').val(),androidStubAlias:$('#androidStubAlias').val()},success:function(response){window.location.reload();}});">
                         <div class="form-group">
                             <label for="id">ID</label>
                             <input class="form-control" id="id" type="text" value="${requestScope.target.id}"
@@ -127,33 +127,15 @@
                                    pattern="^[A-Za-z_$]+[a-zA-Z0-9_$]*$"/>
                         </div>
                         <div class="form-group">
-                            <label for="jteeConfiguratorAlias">J2EE Configurator Alias</label>
-                            <input class="form-control" id="jteeConfiguratorAlias" type="text"
-                                   value="${requestScope.target.jteeConfiguratorAlias}"
-                                   pattern="^[A-Za-z_$]+[a-zA-Z0-9_$]*$"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="jteeExecutorAlias">J2EE Executor Alias</label>
-                            <input class="form-control" id="jteeExecutorAlias" type="text"
-                                   value="${requestScope.target.jteeExecutorAlias}"
-                                   pattern="^[A-Za-z_$]+[a-zA-Z0-9_$]*$"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="jteeControllerAlias">J2EE Controller Alias</label>
-                            <input class="form-control" id="jteeControllerAlias" type="text"
-                                   value="${requestScope.target.jteeControllerAlias}"
+                            <label for="jteeControllerBaseAlias">J2EE Controller Base Alias</label>
+                            <input class="form-control" id="jteeControllerBaseAlias" type="text"
+                                   value="${requestScope.target.jteeControllerBaseAlias}"
                                    pattern="^[A-Za-z_$]+[a-zA-Z0-9_$]*$"/>
                         </div>
                         <div class="form-group">
                             <label for="jteeControllerPath">J2EE Controller Path</label>
                             <input class="form-control" id="jteeControllerPath" type="text"
                                    value="${requestScope.target.jteeControllerPath}"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="jteeAttachmentControllerAlias">J2EE Attachment Controller Alias</label>
-                            <input class="form-control" id="jteeAttachmentControllerAlias" type="text"
-                                   value="${requestScope.target.jteeAttachmentControllerAlias}"
-                                   pattern="^[A-Za-z_$]+[a-zA-Z0-9_$]*$"/>
                         </div>
                         <div class="form-group">
                             <label for="jteeAttachmentControllerPath">J2EE Attachment Controller Path</label>

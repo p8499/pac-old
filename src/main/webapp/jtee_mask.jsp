@@ -32,6 +32,27 @@
             return this;
         }
         <c:forEach items="${module.fields}" var="field">
+            <c:choose>
+                <c:when test="${field.special.type==\"created\"}">
+                    /**
+                     * @return
+                     * Before updating, it returns FALSE set by server.
+                     */</c:when>
+                <c:when test="${field.special.type==\"updated\"}">
+                    /**
+                     * @return
+                     * Before updating, it returns TRUE set by server.
+                     */</c:when>
+                <c:when test="${field.special.type==\"view\"}">
+                    /**
+                     * @return
+                     * Before updating, it returns FALSE set by server.
+                     */</c:when>
+                <c:otherwise>
+                    /**
+                     * @return
+                     * Before updating, it returns TRUE / FALSE set by client.
+                     */</c:otherwise></c:choose>
             public boolean get${pac:upperFirst(field.databaseColumn)}()
             {   return ${field.databaseColumn};
             }

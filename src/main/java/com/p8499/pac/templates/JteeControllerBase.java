@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping(value = "/jtee_controller", produces = "text/html;charset=UTF-8")
-public class JteeController {
+@RequestMapping(value = "/jtee_controllerbase", produces = "text/html;charset=UTF-8")
+public class JteeControllerBase {
     @RequestMapping(value = "/{i}", method = RequestMethod.GET)
     public String get(HttpSession session, HttpServletRequest request, HttpServletResponse response, @PathVariable Integer i) {
         request.setAttribute("index", i);
-        return "/jtee_controller.jsp";
+        return "/jtee_controllerbase.jsp";
     }
 }

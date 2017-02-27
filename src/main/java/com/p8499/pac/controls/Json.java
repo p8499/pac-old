@@ -97,17 +97,12 @@ public class Json {
         downloadJava(request, "base_jtee_range", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "RangeExpr");
         downloadJava(request, "base_jtee_rangelist", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "RangeListExpr");
         downloadJava(request, "base_jtee_defaultdateformatter", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "DefaultDateFormatter");
-        downloadJava(request, "base_jtee_configurator", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "Configurator");
-        downloadJava(request, "base_jtee_simpleconfigurator", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "SimpleConfigurator");
-        downloadJava(request, "base_jtee_executor", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "Executor");
-        downloadJava(request, "base_jtee_simpleexecutor", new File(folder, "src/main/java"), (String) envJtee.get("packageBase"), "SimpleExecutor");
         List<Map> modules = (List<Map>) project.get("modules");
         for (int i = 0; i < modules.size(); i++) {
             downloadJava(request, "jtee_bean", i, new File(folder, "src/main/java"), (String) envJtee.get("packageBean"), (String) modules.get(i).get("jteeBeanAlias"));
             downloadJava(request, "jtee_mask", i, new File(folder, "src/main/java"), (String) envJtee.get("packageMask"), (String) modules.get(i).get("jteeMaskAlias"));
             downloadJava(request, "jtee_mapper", i, new File(folder, "src/main/java"), (String) envJtee.get("packageMapper") + "." + modules.get(i).get("datasource"), (String) modules.get(i).get("jteeMapperAlias"));
-            downloadJava(request, "jtee_controller", i, new File(folder, "src/main/java"), (String) envJtee.get("packageController"), (String) modules.get(i).get("jteeControllerAlias"));
-            downloadJava(request, "jtee_attachmentcontroller", i, new File(folder, "src/main/java"), (String) envJtee.get("packageController"), (String) modules.get(i).get("jteeAttachmentControllerAlias"));
+            downloadJava(request, "jtee_controllerbase", i, new File(folder, "src/main/java"), (String) envJtee.get("packageControllerBase"), (String) modules.get(i).get("jteeControllerBaseAlias"));
         }
         File zip = zip(folder.listFiles(), new File(folder, envJtee.get("app") + ".zip"));
         response.setHeader("Content-Disposition", String.format("attachment; filename=%s", zip.getName()));

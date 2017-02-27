@@ -34,11 +34,8 @@ public class Module {
         target.put("jteeBeanAlias", Util.extract(body, "jteeBeanAlias"));
         target.put("jteeMaskAlias", Util.extract(body, "jteeMaskAlias"));
         target.put("jteeMapperAlias", Util.extract(body, "jteeMapperAlias"));
-        target.put("jteeConfiguratorAlias", Util.extract(body, "jteeConfiguratorAlias"));
-        target.put("jteeExecutorAlias", Util.extract(body, "jteeExecutorAlias"));
-        target.put("jteeControllerAlias", Util.extract(body, "jteeControllerAlias"));
+        target.put("jteeControllerBaseAlias", Util.extract(body, "jteeControllerBaseAlias"));
         target.put("jteeControllerPath", Util.extract(body, "jteeControllerPath"));
-        target.put("jteeAttachmentControllerAlias", Util.extract(body, "jteeAttachmentControllerAlias"));
         target.put("jteeAttachmentControllerPath", Util.extract(body, "jteeAttachmentControllerPath"));
         target.put("androidBeanAlias", Util.extract(body, "androidBeanAlias"));
         target.put("androidMaskAlias", Util.extract(body, "androidMaskAlias"));

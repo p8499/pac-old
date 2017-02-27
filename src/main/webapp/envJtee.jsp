@@ -54,7 +54,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form data-toggle="validator"
-                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}envJtee?path=${requestScope.path}',type:'PUT',data:{app:$('#app').val(),baseUrl:$('#baseUrl').val(),packageBase:$('#packageBase').val(),packageBean:$('#packageBean').val(),packageMask:$('#packageMask').val(),packageMapper:$('#packageMapper').val(),packageConfigurator:$('#packageConfigurator').val(),packageController:$('#packageController').val(),packageControllerAttachment:$('#packageControllerAttachment').val()},success:function(response){window.location.reload();}});">
+                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}envJtee?path=${requestScope.path}',type:'PUT',data:{app:$('#app').val(),baseUrl:$('#baseUrl').val(),packageBase:$('#packageBase').val(),packageBean:$('#packageBean').val(),packageMask:$('#packageMask').val(),packageMapper:$('#packageMapper').val(),packageController:$('#packageController').val()},success:function(response){window.location.reload();}});">
                         <div class="form-group">
                             <label for="app">App</label>
                             <input class="form-control" id="app" type="text" pattern="^[A-Za-z0-9_]+$"
@@ -91,22 +91,10 @@
                                    value="${requestScope.target.packageMapper}"/>
                         </div>
                         <div class="form-group">
-                            <label for="packageConfigurator">Package Configurator</label>
-                            <input class="form-control" id="packageConfigurator" type="text"
+                            <label for="packageControllerBase">Package Controller Base</label>
+                            <input class="form-control" id="packageControllerBase" type="text"
                                    pattern="^([a-z_]{1}[a-z0-9_]*(\.[a-z_]{1}[a-z0-9_]*)*)$"
-                                   value="${requestScope.target.packageConfigurator}"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="packageController">Package Controller</label>
-                            <input class="form-control" id="packageController" type="text"
-                                   pattern="^([a-z_]{1}[a-z0-9_]*(\.[a-z_]{1}[a-z0-9_]*)*)$"
-                                   value="${requestScope.target.packageController}"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="packageControllerAttachment">Package Controller Attachment</label>
-                            <input class="form-control" id="packageControllerAttachment"
-                                   type="text" pattern="^([a-z_]{1}[a-z0-9_]*(\.[a-z_]{1}[a-z0-9_]*)*)$"
-                                   value="${requestScope.target.packageControllerAttachment}"/>
+                                   value="${requestScope.target.packageControllerBase}"/>
                         </div>
                         <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-ok"></span> Save
                         </button>

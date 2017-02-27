@@ -44,9 +44,7 @@ public class Modules {
         model.put("jteeBeanAlias", Util.extract(body, "jteeBeanAlias"));
         model.put("jteeMaskAlias", Util.extract(body, "jteeMaskAlias"));
         model.put("jteeMapperAlias", Util.extract(body, "jteeMapperAlias"));
-        model.put("jteeConfiguratorAlias", Util.extract(body, "jteeConfiguratorAlias"));
-        model.put("jteeExecutorAlias", Util.extract(body, "jteeExecutorAlias"));
-        model.put("jteeControllerAlias", Util.extract(body, "jteeControllerAlias"));
+        model.put("jteeControllerBaseAlias", Util.extract(body, "jteeControllerBaseAlias"));
         model.put("jteeControllerPath", Util.extract(body, "jteeControllerPath"));
         model.put("jteeAttachmentControllerAlias", Util.extract(body, "jteeAttachmentControllerAlias"));
         model.put("jteeAttachmentControllerPath", Util.extract(body, "jteeAttachmentControllerPath"));

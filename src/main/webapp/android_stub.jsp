@@ -129,8 +129,8 @@ public class ${module.androidStubAlias}
         Flowable${"<"}Response${"<"}Void${">"}${">"} flowable=api.uploadAttach(<c:forEach items="${keys}" var="keyItem">${keyItem.key},</c:forEach>name,body).subscribeOn(Schedulers.io());
         return flowable;
     }
-    public Flowable${"<"}Response${"<"}Boolean${">"}${">"} deleteAttach(<c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>String name)
-    {   Flowable${"<"}Response${"<"}Boolean${">"}${">"} flowable=api.deleteAttach(<c:forEach items="${keys}" var="keyItem">${keyItem.key},</c:forEach>name).subscribeOn(Schedulers.io());
+    public Flowable${"<"}Response${"<"}Void${">"}${">"} deleteAttach(<c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>String name)
+    {   Flowable${"<"}Response${"<"}Void${">"}${">"} flowable=api.deleteAttach(<c:forEach items="${keys}" var="keyItem">${keyItem.key},</c:forEach>name).subscribeOn(Schedulers.io());
         return flowable;
     }
     public Flowable${"<"}Response${"<"}List${"<"}String${">"}${">"}${">"} listAttaches(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>)
@@ -155,7 +155,7 @@ public class ${module.androidStubAlias}
         @PUT("${module.jteeAttachmentControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
         Flowable${"<"}Response${"<"}Void${">"}${">"} uploadAttach(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("name") String name,@Body RequestBody body);
         @DELETE("${module.jteeAttachmentControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
-        Flowable${"<"}Response${"<"}Boolean${">"}${">"} deleteAttach(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("name") String name);
+        Flowable${"<"}Response${"<"}Void${">"}${">"} deleteAttach(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("name") String name);
         @GET("${module.jteeAttachmentControllerPath}<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">{${keyItem.key}}<c:if test="${!keyStatus.last}">/</c:if></c:forEach>")
         Flowable${"<"}Response${"<"}List${"<"}String${">"}${">"}${">"} listAttaches(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
     }

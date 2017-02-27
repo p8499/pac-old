@@ -23,6 +23,8 @@ public class Field {
     @RequestMapping(value = "", method = RequestMethod.PUT)
     public String update(HttpSession session, HttpServletRequest request, HttpServletResponse response, @RequestParam(required = true) String path, @RequestBody String body) throws UnsupportedEncodingException {
         Map target = (Map) Util.read(request.getSession().getAttribute("json"), path);
+        target.put("source", Util.extract(body, "source"));
+        target.put("notnull", new Boolean((String) Util.extract(body, "notnull")));
         target.put("databaseColumn", Util.extract(body, "databaseColumn"));
         target.put("description", Util.extract(body, "description"));
         target.put("javaType", Util.extract(body, "javaType"));

@@ -107,7 +107,28 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form data-toggle="validator"
-                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}field?path=${requestScope.path}',type:'PUT',data:{databaseColumn:$('#databaseColumn').val(),description:$('#description').val(),javaType:$('#javaType').val(),stringLength:$('#stringLength').val(),integerLength:$('#integerLength').val(),fractionLength:$('#fractionLength').val(),defaultValue:$('#defaultValue').val()},success:function(response){window.location.reload();}});">
+                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}field?path=${requestScope.path}',type:'PUT',data:{source:$('#source').val(),notnull: $('#notnull').is(':checked'),databaseColumn:$('#databaseColumn').val(),description:$('#description').val(),javaType:$('#javaType').val(),stringLength:$('#stringLength').val(),integerLength:$('#integerLength').val(),fractionLength:$('#fractionLength').val(),defaultValue:$('#defaultValue').val()},success:function(response){window.location.reload();}});">
+                        <div class="form-group">
+                            <label for="source">Source</label>
+                            <select class="form-control" id="source" onchange="onSourceChange();">
+                                <option value="table"
+                                        <c:if test="${requestScope.target.source==\"table\"}"> selected</c:if>>
+                                    Table
+                                    - ${pac:read(sessionScope.json,pac:parent(pac:parent(requestScope.path))).databaseTable}
+                                </option>
+                                <option value="view"
+                                        <c:if test="${requestScope.target.source==\"view\"}"> selected</c:if>>
+                                    View
+                                    - ${pac:read(sessionScope.json,pac:parent(pac:parent(requestScope.path))).databaseView}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input id="notnull" type="checkbox"
+                                       <c:if test="${requestScope.target.notnull}">checked</c:if>/>Not Null
+                            </label>
+                        </div>
                         <div class="form-group">
                             <label for="databaseColumn">Database Column</label>
                             <input class="form-control" id="databaseColumn" type="text"
@@ -165,9 +186,6 @@
                         </button>
                     </form>
                     <button class="btn btn-link" type="button">
-                        <a href="${baseUrl}special?path=${requestScope.path}.special">Special</a>
-                    </button>
-                    <button class="btn btn-link" type="button">
                         <a href="${baseUrl}values?path=${requestScope.path}.values">Values</a>
                     </button>
                 </div>
@@ -176,6 +194,15 @@
     </div>
 </div>
 <script>
+    window.onSourceChange = function () {
+        if ($("#source").val() == "table") {
+            $("#notnull").removeAttr("disabled");
+        }
+        else if ($("#source").val() == "view") {
+            $("#notnull").removeAttr("checked");
+            $("#notnull").attr("disabled", "disabled");
+        }
+    };
     window.onJavaTypeChange = function () {
         if ($("#javaType").val() == "String") {
             $("#stringLength").removeAttr("disabled");
@@ -219,6 +246,7 @@
             $("#defaultValue").removeAttr("step");
         }
     };
+    onSourceChange();
     onJavaTypeChange();
 </script>
 </body>
