@@ -13,7 +13,7 @@
         <c:otherwise>
             <c:set target="${nonkeys}" property="${field.databaseColumn}" value="${field}"/></c:otherwise></c:choose></c:forEach>
 <c:set var="datasource" value="${pac:read(sessionScope.json.envJtee,String.format(\"$.datasources[?(@.id=='%s')]\",module.datasource))[0]}"/>
-<pac:java>
+<%--<pac:java>--%>
     package ${sessionScope.json.envJtee.packageMapper}.${module.datasource};
     import java.util.List;
     import org.apache.ibatis.annotations.Select;
@@ -50,7 +50,7 @@
         <c:choose>
             <c:when test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}">
                 @Insert("INSERT INTO ${module.databaseTable} (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${pac:upper(field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>) VALUES (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")
-                @org.apache.ibatis.annotations.Options(useGeneratedKeys=true,keyProperty="bean.${pac:read(module,"uniques[?(@.key)]")[0][0]}")</c:when>
+                @org.apache.ibatis.annotations.Options(useGeneratedKeys=true,keyProperty="bean.${pac:read(module,"uniques[?(@.key)]")[0].items[0]}")</c:when>
             <c:otherwise>
                 @Insert("INSERT INTO ${module.databaseTable} (${pac:join(",",pac:upper(pac:read(module.fields,"$..databaseColumn")))}) VALUES (<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")</c:otherwise></c:choose>
         public void add(@Param("bean")${module.jteeBeanAlias} bean);
@@ -195,4 +195,4 @@
                     <c:if test="${!dKeyColumnStatus.last}">,</c:if></c:forEach>
             );</c:forEach>--%>
     }
-</pac:java>
+<%--</pac:java>--%>
