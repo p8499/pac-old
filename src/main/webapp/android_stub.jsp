@@ -70,13 +70,7 @@ public class ${module.androidStubAlias}
         return flowable;
     }
     public Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} add(${module.androidBeanAlias} bean)
-    {   Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} flowable=null;
-        try
-        {   flowable=api.add(<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">bean.get${pac:upperFirst(keyItem.key)}(),</c:forEach></c:if>RetrofitFactory.getObjectMapper().writeValueAsString(bean)).subscribeOn(Schedulers.io());
-        }
-        catch(JsonProcessingException e)
-        {   e.printStackTrace();
-        }
+    {   Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} flowable=api.add(<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">bean.get${pac:upperFirst(keyItem.key)}(),</c:forEach></c:if>bean).subscribeOn(Schedulers.io());
         return flowable;
     }
     public Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} update(${module.androidBeanAlias} bean)
@@ -85,7 +79,7 @@ public class ${module.androidStubAlias}
     public Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} update(${module.androidBeanAlias} bean,${module.androidMaskAlias} mask)
     {   Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} flowable=null;
         try
-        {   flowable=api.update(<c:forEach items="${keys}" var="keyItem">bean.get${pac:upperFirst(keyItem.key)}(),</c:forEach>RetrofitFactory.getObjectMapper().writeValueAsString(bean),mask==null?null:RetrofitFactory.getObjectMapper().writeValueAsString(mask)).subscribeOn(Schedulers.io());
+        {   flowable=api.update(<c:forEach items="${keys}" var="keyItem">bean.get${pac:upperFirst(keyItem.key)}(),</c:forEach>bean,mask==null?null:RetrofitFactory.getObjectMapper().writeValueAsString(mask)).subscribeOn(Schedulers.io());
         }
         catch(JsonProcessingException e)
         {   e.printStackTrace();
@@ -145,9 +139,9 @@ public class ${module.androidStubAlias}
     {   @GET(path+pathKey)
         Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} get(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("mask") String mask);
         @POST(path<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}">+pathKey</c:if>)
-        Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} add(<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>@Body String bean);
+        Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} add(<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>@Body ${module.androidBeanAlias} bean);
         @PUT(path+pathKey)
-        Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} update(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Body String bean,@Query("mask") String mask);
+        Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} update(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Body ${module.androidBeanAlias} bean,@Query("mask") String mask);
         @DELETE(path+pathKey)
         Flowable${"<"}Response${"<"}Void${">"}${">"} delete(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
         @GET(path)
