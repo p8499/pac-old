@@ -237,11 +237,11 @@ public abstract class ${module.jteeControllerBaseAlias} {
             HttpServletResponse response,
             <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>)
             throws Exception {
-        List${"<"}String${">"} result =onListAttaches(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.key}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
+        List${"<"}String${">"} result =onListAttaches(session, request, response, <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.key}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
         return jackson.writeValueAsString(result);
     }
 
-    protected abstract List${"<"}String${">"} onListAttaches(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>) throws Exception;
+    protected abstract List${"<"}String${">"} onListAttaches(HttpSession session, HttpServletRequest request, HttpServletResponse response, <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>) throws Exception;
 
     @Value(value="${"#{jackson}"}")
     protected ObjectMapper jackson;
