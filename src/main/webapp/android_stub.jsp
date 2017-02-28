@@ -72,7 +72,7 @@ public class ${module.androidStubAlias}
     public Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} add(${module.androidBeanAlias} bean)
     {   Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} flowable=null;
         try
-        {   flowable=api.add(<c:if test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">bean.get${pac:upperFirst(keyItem.key)}(),</c:forEach></c:if>RetrofitFactory.getObjectMapper().writeValueAsString(bean)).subscribeOn(Schedulers.io());
+        {   flowable=api.add(<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">bean.get${pac:upperFirst(keyItem.key)}(),</c:forEach></c:if>RetrofitFactory.getObjectMapper().writeValueAsString(bean)).subscribeOn(Schedulers.io());
         }
         catch(JsonProcessingException e)
         {   e.printStackTrace();
@@ -144,8 +144,8 @@ public class ${module.androidStubAlias}
     public interface Api
     {   @GET(path+pathKey)
         Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} get(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Query("mask") String mask);
-        @POST(path<c:if test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}">+pathKey</c:if>)
-        Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} add(<c:if test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>@Body String bean);
+        @POST(path<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}">+pathKey</c:if>)
+        Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} add(<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>@Body String bean);
         @PUT(path+pathKey)
         Flowable${"<"}Response${"<"}${module.androidBeanAlias}${">"}${">"} update(<c:forEach items="${keys}" var="keyItem">@Path("${keyItem.value.databaseColumn}") ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Body String bean,@Query("mask") String mask);
         @DELETE(path+pathKey)

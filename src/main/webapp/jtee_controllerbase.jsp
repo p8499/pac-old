@@ -65,18 +65,19 @@ public abstract class ${module.jteeControllerBaseAlias} {
         return ${pac:lowerFirst(module.jteeMapperAlias)}.get(<c:forEach items="${keys}" var="keyItem">${keyItem.key},</c:forEach> mask);
     }
 
-    @RequestMapping(value = path, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = path<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}">+pathKey</c:if>, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String add(
             HttpSession session,
             HttpServletRequest request,
             HttpServletResponse response,
+            <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">@PathVariable ${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if>
             @RequestBody ${module.jteeBeanAlias} bean)
             throws Exception {
-        onAdd(session, request, response, bean);
+        onAdd(session, request, response, <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">${keyItem.key},</c:forEach></c:if> bean);
         return jackson.writeValueAsString(bean);
     }
 
-    protected abstract ${module.jteeBeanAlias} onAdd(HttpSession session, HttpServletRequest request, HttpServletResponse response, ${module.jteeBeanAlias} bean) throws Exception;
+    protected abstract ${module.jteeBeanAlias} onAdd(HttpSession session, HttpServletRequest request, HttpServletResponse response, <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if> ${module.jteeBeanAlias} bean) throws Exception;
 
     protected ${module.jteeBeanAlias} baseAdd(${module.jteeBeanAlias} bean) {
         if (!validatorFactory.getValidator().validate(bean, Insert.class).isEmpty()) {
