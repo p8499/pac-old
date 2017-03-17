@@ -122,7 +122,20 @@
             + "<if test='filter!=null'>WHERE ${'${filter}'}</if> "
             + "${'</script>'}")
         public long count(@Param("filter")String filter);
-
+        <c:forEach items="${pac:read(module,\"$.fields[?(@.javaType in ['Integer','Double','java.util.Date'])]\")}" var="field">
+            @Select(
+                "${"<"}script${">"}"
+                    + "SELECT MAX(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
+                    + "<if test='filter!=null'>WHERE ${filter}</if> "
+                    + "${"<"}/script${">"}")
+            public Integer max${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
+            @Select(
+                "${"<"}script${">"}"
+                    + "SELECT MIN(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
+                    + "<if test='filter!=null'>WHERE ${filter}</if> "
+                    + "${"<"}/script${">"}")
+            public Integer min${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
+        </c:forEach>
 <%--
         <c:forEach items="${pac:read(module,\"$.fields[?(@.special.type=='next')]\")}" var="field">
             @Select("SELECT COALESCE(MAX(${pac:upper(field.databaseColumn)}),0)+1 FROM ${module.databaseView} WHERE <c:forEach items="${field.special.scope}" var="scopeColumn" varStatus="fieldStatus">${String.format("%s=#{%s}",scopeColumn,scopeColumn)}<c:if test="${!fieldStatus.last}"> AND </c:if></c:forEach>")
