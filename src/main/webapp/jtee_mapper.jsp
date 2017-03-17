@@ -128,13 +128,13 @@
                     + "SELECT MAX(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
                     + "<if test='filter!=null'>WHERE ${filter}</if> "
                     + "${"<"}/script${">"}")
-            public Integer max${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
+            public ${field.javaType} max${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
             @Select(
                 "${"<"}script${">"}"
                     + "SELECT MIN(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
                     + "<if test='filter!=null'>WHERE ${filter}</if> "
                     + "${"<"}/script${">"}")
-            public Integer min${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
+            public ${field.javaType} min${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
         </c:forEach>
 <%--
         <c:forEach items="${pac:read(module,\"$.fields[?(@.special.type=='next')]\")}" var="field">
