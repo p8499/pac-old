@@ -58,10 +58,10 @@ public class ${module.androidBeanAlias} implements Parcelable
     public ${module.androidBeanAlias}(Parcel in)
     {   <c:forEach items="${module.fields}" var="field">
             <c:choose>
-                <c:when test="${field.javaType==\"Integer\"}">this.${field.databaseColumn}=in.readInt();</c:when>
-                <c:when test="${field.javaType==\"Double\"}">this.${field.databaseColumn}=in.Double();</c:when>
-                <c:when test="${field.javaType==\"String\"}">this.${field.databaseColumn}=in.readString();</c:when>
-                <c:when test="${field.javaType==\"java.util.Date\"}">this.${field.databaseColumn}=DefaultDateFormatter.parse(in.readString());</c:when></c:choose></c:forEach>
+                <c:when test="${field.javaType==\"Integer\"}">this.${field.databaseColumn}=(Integer)in.readValue(Integer.class.getClassLoader());</c:when>
+                <c:when test="${field.javaType==\"Double\"}">this.${field.databaseColumn}=(Double)in.readValue(Integer.class.getClassLoader());</c:when>
+                <c:when test="${field.javaType==\"String\"}">this.${field.databaseColumn}=(String)in.readValue(Integer.class.getClassLoader());</c:when>
+                <c:when test="${field.javaType==\"java.util.Date\"}">this.${field.databaseColumn}=DefaultDateFormatter.parse((String)in.readValue(Integer.class.getClassLoader()));</c:when></c:choose></c:forEach>
     }
     <c:forEach items="${module.fields}" var="field">
         public ${field.javaType} get${pac:upperFirst(field.databaseColumn)}()
@@ -79,10 +79,10 @@ public class ${module.androidBeanAlias} implements Parcelable
     public void writeToParcel(Parcel dest,int flags)
     {   <c:forEach items="${module.fields}" var="field">
             <c:choose>
-                <c:when test="${field.javaType==\"Integer\"}">dest.writeInt(${field.databaseColumn});</c:when>
-                <c:when test="${field.javaType==\"Double\"}">dest.writeDouble(${field.databaseColumn});</c:when>
-                <c:when test="${field.javaType==\"String\"}">dest.writeString(${field.databaseColumn});</c:when>
-                <c:when test="${field.javaType==\"java.util.Date\"}">dest.writeString(DefaultDateFormatter.format(${field.databaseColumn}));</c:when></c:choose></c:forEach>
+                <c:when test="${field.javaType==\"Integer\"}">dest.writeValue(${field.databaseColumn});</c:when>
+                <c:when test="${field.javaType==\"Double\"}">dest.writeValue(${field.databaseColumn});</c:when>
+                <c:when test="${field.javaType==\"String\"}">dest.writeValue(${field.databaseColumn});</c:when>
+                <c:when test="${field.javaType==\"java.util.Date\"}">dest.writeValue(DefaultDateFormatter.format(${field.databaseColumn}));</c:when></c:choose></c:forEach>
     }
 
     @Override

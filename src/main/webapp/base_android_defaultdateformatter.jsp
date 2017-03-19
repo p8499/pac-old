@@ -21,13 +21,13 @@ public class DefaultDateFormatter {
     }
 
     public static String format(Date date) {
-        return getFormatter().format(date);
+        return date==null?null:getFormatter().format(date);
     }
 
     public static Date parse(String str) {
         Date date = null;
         try {
-            date = getFormatter().parse(str);
+            date = str==null?null:getFormatter().parse(str);
         } catch (ParseException e) {
             e.printStackTrace();
         }
