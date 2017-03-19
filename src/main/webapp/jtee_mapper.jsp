@@ -126,13 +126,13 @@
             @Select(
                 "${"<"}script${">"}"
                     + "SELECT MAX(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
-                    + "<if test='filter!=null'>WHERE ${filter}</if> "
+                    + "<if test='filter!=null'>WHERE ${'${filter}'}</if> "
                     + "${"<"}/script${">"}")
             public ${field.javaType} max${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
             @Select(
                 "${"<"}script${">"}"
                     + "SELECT MIN(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
-                    + "<if test='filter!=null'>WHERE ${filter}</if> "
+                    + "<if test='filter!=null'>WHERE ${'${filter}'}</if> "
                     + "${"<"}/script${">"}")
             public ${field.javaType} min${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
         </c:forEach>
