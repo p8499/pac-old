@@ -141,7 +141,7 @@ public abstract class ${module.jteeControllerBaseAlias} {
             @RequestParam(required = false) String mask)
             throws Exception {
         FilterExpr filterObj = filter == null || filter.equals("") ? null : jackson.readValue(filter, FilterExpr.class);
-        OrderByListExpr orderByListObj = mask == null || mask.equals("") ? null : OrderByListExpr.fromQuery(orderBy);
+        OrderByListExpr orderByListObj = orderBy == null || orderBy.equals("") ? null : OrderByListExpr.fromQuery(orderBy);
         RangeExpr rangeObj = RangeExpr.fromQuery(range);
         ${module.jteeMaskAlias} maskObj = mask == null || mask.equals("") ? new ${module.jteeMaskAlias}().all(true) : jackson.readValue(mask, ${module.jteeMaskAlias}.class);
         Long total = onCount(session, request, response, filterObj);
