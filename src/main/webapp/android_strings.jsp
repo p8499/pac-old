@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="pac" uri="/WEB-INF/pac.tld" %>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">${sessionScope.json.envAndroid.app}</string>
 </resources>

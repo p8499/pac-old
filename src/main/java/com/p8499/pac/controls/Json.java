@@ -122,6 +122,7 @@ public class Json {
         Map envAndroid = (Map) project.get("envAndroid");
         downloadXml(request, "android_manifest", new File(folder, "src/main"), "", "AndroidManifest");
         downloadXml(request, "android_strings", new File(folder, "src/main/res/values"), "", "strings");
+        downloadXml(request, "android_constants", new File(folder, "src/main/res/values"), "", "constants");
         downloadJava(request, "base_android_filter", new File(folder, "src/main/java"), (String) envAndroid.get("packageBase"), "FilterExpr");
         downloadJava(request, "base_android_filter_logic", new File(folder, "src/main/java"), (String) envAndroid.get("packageBase"), "FilterLogicExpr");
         downloadJava(request, "base_android_filter_condition", new File(folder, "src/main/java"), (String) envAndroid.get("packageBase"), "FilterConditionExpr");
