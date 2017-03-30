@@ -27,54 +27,5 @@ public class FilterOperandExpr implements FilterExpr {
         this.data = data;
         this.isCol = isCol;
     }
-
-    public String toString() {
-        if (!isCol && OP_STRING.equals(op))
-            return String.format("'%s'", parseEscapedString(data));
-        else if (!isCol && OP_DATE.equals(op)) {
-            return String.format("to_date('%s','yyyymmddhh24miss')", data);
-        } else
-            return data;
-    }
-
-    public static String parseEscapedString(String raw) {    //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\");
-        String escaped = raw.replace("'", "\\\\'").replaceAll("\\\\", "\\\\\\\\");
-        return escaped;
-    }
-
-    public static String parseWildEscapedString(String raw) {    //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\").replaceAll("%","\\%").replaceAll("_","\\_");
-        String escaped = raw.replace("'", "\\\\'").replaceAll("\\\\", "\\\\\\\\").replaceAll("%", "\\\\%").replaceAll("_", "\\\\_");
-        return escaped;
-    }
-
-    public String toEscapedStartWithSql() {
-        StringBuffer sb = new StringBuffer();
-        if (!isCol && OP_STRING.equals(op)) {
-            sb.append("'");
-            sb.append(parseWildEscapedString(data));
-            sb.append("%'");
-        }
-        return sb.toString();
-    }
-
-    public String toEscapedEndWithSql() {
-        StringBuffer sb = new StringBuffer();
-        if (!isCol && OP_STRING.equals(op)) {
-            sb.append("'%");
-            sb.append(parseWildEscapedString(data));
-            sb.append("'");
-        }
-        return sb.toString();
-    }
-
-    public String toEscapedContainSql() {
-        StringBuffer sb = new StringBuffer();
-        if (!isCol && OP_STRING.equals(op)) {
-            sb.append("'%");
-            sb.append(parseWildEscapedString(data));
-            sb.append("%'");
-        }
-        return sb.toString();
-    }
 }
 </pac:java>

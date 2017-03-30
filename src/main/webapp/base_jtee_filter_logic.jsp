@@ -118,7 +118,7 @@ public class FilterLogicExpr implements FilterExpr {
         return this;
     }
 
-    public String toString() {
+    public String toStringPostgresql() {
         if (op == null) {
             return null;
         } else {
@@ -127,7 +127,7 @@ public class FilterLogicExpr implements FilterExpr {
                 case OP_AND: {
                     for (int i = 0; i < data.size(); i++) {
                         sb.append("(");
-                        sb.append(data.get(i).toString());
+                        sb.append(data.get(i).toStringPostgresql());
                         sb.append(")");
                         if (i < data.size() - 1) {
                             sb.append(" AND ");
@@ -138,7 +138,7 @@ public class FilterLogicExpr implements FilterExpr {
                 case OP_OR: {
                     for (int i = 0; i < data.size(); i++) {
                         sb.append("(");
-                        sb.append(data.get(i).toString());
+                        sb.append(data.get(i).toStringPostgresql());
                         sb.append(")");
                         if (i < data.size() - 1) {
                             sb.append(" OR ");
@@ -149,7 +149,47 @@ public class FilterLogicExpr implements FilterExpr {
                 case OP_NOT: {
                     sb.append("NOT ");
                     sb.append("(");
-                    sb.append(data.get(0).toString());
+                    sb.append(data.get(0).toStringPostgresql());
+                    sb.append(")");
+                    break;
+                }
+            }
+            return sb.toString();
+        }
+    }
+
+    public String toStringOracle() {
+        if (op == null) {
+            return null;
+        } else {
+            StringBuffer sb = new StringBuffer();
+            switch (op) {
+                case OP_AND: {
+                    for (int i = 0; i < data.size(); i++) {
+                        sb.append("(");
+                        sb.append(data.get(i).toStringOracle());
+                        sb.append(")");
+                        if (i < data.size() - 1) {
+                            sb.append(" AND ");
+                        }
+                    }
+                    break;
+                }
+                case OP_OR: {
+                    for (int i = 0; i < data.size(); i++) {
+                        sb.append("(");
+                        sb.append(data.get(i).toStringOracle());
+                        sb.append(")");
+                        if (i < data.size() - 1) {
+                            sb.append(" OR ");
+                        }
+                    }
+                    break;
+                }
+                case OP_NOT: {
+                    sb.append("NOT ");
+                    sb.append("(");
+                    sb.append(data.get(0).toStringOracle());
                     sb.append(")");
                     break;
                 }

@@ -117,45 +117,5 @@ public class FilterLogicExpr implements FilterExpr {
         append(FilterConditionExpr.existsObject(obj, expr));
         return this;
     }
-
-    public String toString() {
-        if (op == null) {
-            return null;
-        } else {
-            StringBuffer sb = new StringBuffer();
-            switch (op) {
-                case OP_AND: {
-                    for (int i = 0; i < data.size(); i++) {
-                        sb.append("(");
-                        sb.append(data.get(i).toString());
-                        sb.append(")");
-                        if (i < data.size() - 1) {
-                            sb.append(" AND ");
-                        }
-                    }
-                    break;
-                }
-                case OP_OR: {
-                    for (int i = 0; i < data.size(); i++) {
-                        sb.append("(");
-                        sb.append(data.get(i).toString());
-                        sb.append(")");
-                        if (i < data.size() - 1) {
-                            sb.append(" OR ");
-                        }
-                    }
-                    break;
-                }
-                case OP_NOT: {
-                    sb.append("NOT ");
-                    sb.append("(");
-                    sb.append(data.get(0).toString());
-                    sb.append(")");
-                    break;
-                }
-            }
-            return sb.toString();
-        }
-    }
 }
 </pac:java>

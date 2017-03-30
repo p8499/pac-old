@@ -159,11 +159,11 @@ public abstract class ${module.jteeControllerBaseAlias} {
     protected abstract List${"<"}${module.jteeBeanAlias}${">"} onQuery(HttpSession session, HttpServletRequest request, HttpServletResponse response, FilterExpr filter, OrderByListExpr orderByList, long start, long count, ${module.jteeMaskAlias} mask) throws Exception;
 
     protected long baseCount(FilterExpr filter) {
-        return ${pac:lowerFirst(module.jteeMapperAlias)}.count(filter == null ? null : filter.toString());
+        return ${pac:lowerFirst(module.jteeMapperAlias)}.count(filter);
     }
 
     protected List${"<"}${module.jteeBeanAlias}${">"} baseQuery(FilterExpr filter, OrderByListExpr orderByList, long start, long count, ${module.jteeMaskAlias} mask) {
-        return ${pac:lowerFirst(module.jteeMapperAlias)}.query(filter == null ? null : filter.toString(), orderByList == null ? null : orderByList.toString(), start, count, mask);
+        return ${pac:lowerFirst(module.jteeMapperAlias)}.query(filter, orderByList, start, count, mask);
     }
 
     @RequestMapping(

@@ -70,7 +70,17 @@ public class ${module.androidBeanAlias} implements Parcelable
         public ${module.androidBeanAlias} set${pac:upperFirst(field.databaseColumn)}(${field.javaType} ${field.databaseColumn})
         {	this.${field.databaseColumn}=${field.databaseColumn};
             return this;
-        }</c:forEach>
+        }
+        <c:choose>
+            <c:when test="${field.javaType==\"Integer\"}">
+                public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_INTEGER=${field.integerLength};
+                public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_MIN=${String.format("%.0f",-Math.pow(10,field.integerLength))};
+                public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_MAX=${String.format("%.0f",Math.pow(10,field.integerLength))};</c:when>
+            <c:when test="${field.javaType==\"Double\"}">
+                public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_INTEGER=${field.integerLength};
+                public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_FRACTION=${field.fractionLength};</c:when>
+            <c:when test="${field.javaType==\"String\"}">
+                public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_STRING=${field.stringLength};</c:when></c:choose></c:forEach>
     @Override
     public int describeContents()
     {	return 0;

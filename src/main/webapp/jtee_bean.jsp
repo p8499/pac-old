@@ -78,12 +78,12 @@
             <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial||!keys.containsKey(field.databaseColumn)}">
                 <c:choose>
                     <c:when test="${field.javaType==\"Integer\"}">
-                        @javax.validation.constraints.Min(value=${String.format("%.0f",-Math.pow(10,field.integerLength))})
-                        @javax.validation.constraints.Max(value=${String.format("%.0f",Math.pow(10,field.integerLength))})</c:when>
+                        @javax.validation.constraints.Min(value=CONSTRAINT_${pac:upper(field.databaseColumn)}_MIN)
+                        @javax.validation.constraints.Max(value=CONSTRAINT_${pac:upper(field.databaseColumn)}_MAX)</c:when>
                     <c:when test="${field.javaType==\"Double\"}">
-                        @javax.validation.constraints.Digits(integer=${field.integerLength},fraction={field.fractionLength})</c:when>
+                        @javax.validation.constraints.Digits(integer=CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_FRACTION,fraction=CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_FRACTION)</c:when>
                     <c:when test="${field.javaType==\"String\"}">
-                        @javax.validation.constraints.Size(max=${field.stringLength})</c:when>
+                        @javax.validation.constraints.Size(max=CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_STRING)</c:when>
                 </c:choose>
             </c:if>
             public ${field.javaType} get${pac:upperFirst(field.databaseColumn)}()
@@ -91,8 +91,22 @@
             }
             public ${module.jteeBeanAlias} set${pac:upperFirst(field.databaseColumn)}(${field.javaType} ${field.databaseColumn})
             {   this.${field.databaseColumn}=${field.databaseColumn};
-            return this;
+                return this;
             }
+            <c:choose>
+                <c:when test="${field.javaType==\"Integer\"}">
+                    public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_INTEGER=${field.integerLength};
+                    public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_MIN=${String.format("%.0f",-Math.pow(10,field.integerLength))};
+                    public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_MAX=${String.format("%.0f",Math.pow(10,field.integerLength))};
+                </c:when>
+                <c:when test="${field.javaType==\"Double\"}">
+                    public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_INTEGER=${field.integerLength};
+                    public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_FRACTION=${field.fractionLength};
+                </c:when>
+                <c:when test="${field.javaType==\"String\"}">
+                    public static final int CONSTRAINT_${pac:upper(field.databaseColumn)}_LENGTH_STRING=${field.stringLength};
+                </c:when>
+            </c:choose>
         </c:forEach>
     }
 </pac:java>

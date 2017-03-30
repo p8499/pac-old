@@ -129,89 +129,178 @@ public class FilterConditionExpr implements FilterExpr {
         return new FilterLogicExpr(FilterLogicExpr.OP_NOT, this);
     }
 
-    public String toString() {
+    public String toStringPostgresql() {
         StringBuffer sb = new StringBuffer();
         switch (op) {
             case OP_EQUAL: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append("=");
-                sb.append(datum1.toString());
+                sb.append(datum1.toStringPostgresql());
                 break;
             }
             case OP_GREATER: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append(">");
-                sb.append(datum1.toString());
+                sb.append(datum1.toStringPostgresql());
                 break;
             }
             case OP_LESS: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append("<");
-                sb.append(datum1.toString());
+                sb.append(datum1.toStringPostgresql());
                 break;
             }
             case OP_GREATEREQUAL: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append(">=");
-                sb.append(datum1.toString());
+                sb.append(datum1.toStringPostgresql());
                 break;
             }
             case OP_LESSEQUAL: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append("<=");
-                sb.append(datum1.toString());
+                sb.append(datum1.toStringPostgresql());
                 break;
             }
             case OP_ISEMPTY: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append(" IS NULL OR ");
-                sb.append(datum1.toString());
+                sb.append(datum1.toStringPostgresql());
                 sb.append(" = ''");
                 break;
             }
             case OP_CONTAIN: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append(" LIKE ");
-                sb.append(datum1.toEscapedContainSql());
+                sb.append(datum1.toEscapedContainSqlPostgresql());
                 break;
             }
             case OP_STARTWITH: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append(" LIKE ");
-                sb.append(datum1.toEscapedStartWithSql());
+                sb.append(datum1.toEscapedStartWithSqlPostgresql());
                 break;
             }
             case OP_ENDWITH: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append(" LIKE ");
-                sb.append(datum1.toEscapedEndWithSql());
+                sb.append(datum1.toEscapedEndWithSqlPostgresql());
                 break;
             }
             case OP_EXISTS: {
                 FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
                 FilterLogicExpr datum1 = (FilterLogicExpr) data.get(1);
                 sb.append("EXISTS (SELECT * FROM ");
-                sb.append(datum0.toString());
+                sb.append(datum0.toStringPostgresql());
                 sb.append(" WHERE ");
-                sb.append(datum1.toString());
+                sb.append(datum1.toStringPostgresql());
+                sb.append(")");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String toStringOracle() {
+        StringBuffer sb = new StringBuffer();
+        switch (op) {
+            case OP_EQUAL: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append("=");
+                sb.append(datum1.toStringOracle());
+                break;
+            }
+            case OP_GREATER: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append(">");
+                sb.append(datum1.toStringOracle());
+                break;
+            }
+            case OP_LESS: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append("<");
+                sb.append(datum1.toStringOracle());
+                break;
+            }
+            case OP_GREATEREQUAL: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append(">=");
+                sb.append(datum1.toStringOracle());
+                break;
+            }
+            case OP_LESSEQUAL: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append("<=");
+                sb.append(datum1.toStringOracle());
+                break;
+            }
+            case OP_ISEMPTY: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append(" IS NULL OR ");
+                sb.append(datum1.toStringOracle());
+                sb.append(" = ''");
+                break;
+            }
+            case OP_CONTAIN: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append(" LIKE ");
+                sb.append(datum1.toEscapedContainSqlOracle());
+                break;
+            }
+            case OP_STARTWITH: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append(" LIKE ");
+                sb.append(datum1.toEscapedStartWithSqlOracle());
+                break;
+            }
+            case OP_ENDWITH: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterOperandExpr datum1 = (FilterOperandExpr) data.get(1);
+                sb.append(datum0.toStringOracle());
+                sb.append(" LIKE ");
+                sb.append(datum1.toEscapedEndWithSqlOracle());
+                break;
+            }
+            case OP_EXISTS: {
+                FilterOperandExpr datum0 = (FilterOperandExpr) data.get(0);
+                FilterLogicExpr datum1 = (FilterLogicExpr) data.get(1);
+                sb.append("EXISTS (SELECT * FROM ");
+                sb.append(datum0.toStringOracle());
+                sb.append(" WHERE ");
+                sb.append(datum1.toStringOracle());
                 sb.append(")");
             }
         }

@@ -28,51 +28,118 @@ public class FilterOperandExpr implements FilterExpr {
         this.isCol = isCol;
     }
 
-    public String toString() {
-        if (!isCol && OP_STRING.equals(op))
-            return String.format("'%s'", parseEscapedString(data));
+    public String toStringPostgresql() {
+        if (!isCol && OP_STRING.equals(op)) return String.format("'%s'", parseEscapedStringPostgresql(data));
         else if (!isCol && OP_DATE.equals(op)) {
             return String.format("to_date('%s','yyyymmddhh24miss')", data);
-        } else
-            return data;
+        } else return data;
     }
 
-    public static String parseEscapedString(String raw) {    //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\");
+    public String toStringOracle() {
+        if (!isCol && OP_STRING.equals(op)) return String.format("'%s'", parseEscapedStringOracle(data));
+        else if (!isCol && OP_DATE.equals(op)) {
+            return String.format("to_date('%s','yyyymmddhh24miss')", data);
+        } else return data;
+    }
+
+    public static String parseEscapedStringPostgresql(String raw) {
+        //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\");
         String escaped = raw.replace("'", "\\\\'").replaceAll("\\\\", "\\\\\\\\");
         return escaped;
     }
 
-    public static String parseWildEscapedString(String raw) {    //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\").replaceAll("%","\\%").replaceAll("_","\\_");
-        String escaped = raw.replace("'", "\\\\'").replaceAll("\\\\", "\\\\\\\\").replaceAll("%", "\\\\%").replaceAll("_", "\\\\_");
+    public static String parseEscapedStringOracle(String raw) {
+        //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\");
+        String escaped = raw.replace("'", "''");
         return escaped;
     }
 
-    public String toEscapedStartWithSql() {
+    public static String parseWildEscapedStringPostgresql(String raw) {
+        //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\").replaceAll("%","\\%").replaceAll("_","\\_");
+        String escaped =
+                raw.replace("'", "\\\\'")
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("%", "\\\\%")
+                        .replaceAll("_", "\\\\_");
+        return escaped;
+    }
+
+    public static String parseWildEscapedStringOracle(String raw) {
+        //String escaped=raw.replaceAll("\0","\\0").replaceAll("\n","\\n").replaceAll("\t","\\t").replaceAll("\r","\\r").replaceAll("\b","\\b").replaceAll("'","\\'").replaceAll("\\","\\\\").replaceAll("%","\\%").replaceAll("_","\\_");
+        String escaped =
+                raw.replace("'", "''")
+                        .replaceAll("\\\\", "\\\\\\\\")
+                        .replaceAll("%", "\\\\%")
+                        .replaceAll("_", "\\\\_");
+        return escaped;
+    }
+
+    public boolean isEscapedOracle() {
+        return data.contains("%") || data.contains("\\") || data.contains("_");
+    }
+
+    public String toEscapedStartWithSqlPostgresql() {
         StringBuffer sb = new StringBuffer();
         if (!isCol && OP_STRING.equals(op)) {
             sb.append("'");
-            sb.append(parseWildEscapedString(data));
+            sb.append(parseWildEscapedStringPostgresql(data));
             sb.append("%'");
         }
         return sb.toString();
     }
 
-    public String toEscapedEndWithSql() {
+    public String toEscapedStartWithSqlOracle() {
+        StringBuffer sb = new StringBuffer();
+        if (!isCol && OP_STRING.equals(op)) {
+            sb.append("'");
+            sb.append(parseWildEscapedStringOracle(data));
+            sb.append("%'");
+            if (isEscapedOracle())
+                sb.append(" escape '\\'");
+        }
+        return sb.toString();
+    }
+
+    public String toEscapedEndWithSqlPostgresql() {
         StringBuffer sb = new StringBuffer();
         if (!isCol && OP_STRING.equals(op)) {
             sb.append("'%");
-            sb.append(parseWildEscapedString(data));
+            sb.append(parseWildEscapedStringPostgresql(data));
             sb.append("'");
         }
         return sb.toString();
     }
 
-    public String toEscapedContainSql() {
+    public String toEscapedEndWithSqlOracle() {
         StringBuffer sb = new StringBuffer();
         if (!isCol && OP_STRING.equals(op)) {
             sb.append("'%");
-            sb.append(parseWildEscapedString(data));
+            sb.append(parseWildEscapedStringOracle(data));
+            sb.append("'");
+            if (isEscapedOracle())
+                sb.append(" escape '\\'");
+        }
+        return sb.toString();
+    }
+
+    public String toEscapedContainSqlPostgresql() {
+        StringBuffer sb = new StringBuffer();
+        if (!isCol && OP_STRING.equals(op)) {
+            sb.append("'%");
+            sb.append(parseWildEscapedStringPostgresql(data));
             sb.append("%'");
+        }
+        return sb.toString();
+    }
+
+    public String toEscapedContainSqlOracle() {
+        StringBuffer sb = new StringBuffer();
+        if (!isCol && OP_STRING.equals(op)) {
+            sb.append("'%");
+            sb.append(parseWildEscapedStringOracle(data));
+            sb.append("%'");
+            if (isEscapedOracle())
+                sb.append(" escape '\\'");
         }
         return sb.toString();
     }

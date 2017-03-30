@@ -22,6 +22,8 @@
     import org.apache.ibatis.annotations.Delete;
     import org.apache.ibatis.annotations.Param;
     import org.springframework.stereotype.Component;
+    import ${sessionScope.json.envJtee.packageBase}.FilterExpr;
+    import ${sessionScope.json.envJtee.packageBase}.OrderByListExpr;
     import ${sessionScope.json.envJtee.packageMask}.${module.jteeMaskAlias};
     import ${sessionScope.json.envJtee.packageBean}.${module.jteeBeanAlias};
     @Component("${pac:lowerFirst(module.jteeMapperAlias)}")
@@ -92,8 +94,8 @@
                     + "</otherwise>"
                     + "</choose>"
                     + "FROM ${module.databaseView} "
-                    + "<if test='filter!=null'>WHERE ${'${filter}'} </if>"
-                    + "<if test='order!=null'>ORDER BY ${'${order}'} </if>"
+                    + "<if test='filter!=null'>WHERE ${'${filter.toStringPostgresql()}'} </if>"
+                    + "<if test='order!=null'>ORDER BY ${'${order.toString()}'} </if>"
                     + "LIMIT ${'#{count}'} OFFSET ${'#{start}'}"
                     + "${'</script>'}")</c:when>
             <c:when test="${datasource.databaseType==\"oracle\"}">
@@ -111,30 +113,57 @@
                     + "</otherwise>"
                     + "</choose>"
                     + "FROM ${module.databaseView} "
-                    + "<if test='filter!=null'>WHERE ${'${filter}'} </if>"
-                    + "<if test='order!=null'>ORDER BY ${'${order}'} </if>"
+                    + "<if test='filter!=null'>WHERE ${'${filter.toStringOracle()}'} </if>"
+                    + "<if test='order!=null'>ORDER BY ${'${order.toString()}'} </if>"
                     + ") B WHERE ROWNUM &lt;= ${'#{count}+1'}) A WHERE B_ROWNUM &gt;= ${'#{count}+#{start}'}"
                     + "${'</script>'}")</c:when></c:choose>
-        public List<${module.jteeBeanAlias}> query(@Param("filter")String filter,@Param("order")String order,@Param("start")long start,@Param("count")long count,@Param("mask")${module.jteeMaskAlias} mask);
+        public List<${module.jteeBeanAlias}> query(@Param("filter")FilterExpr filter,@Param("order")OrderByListExpr order,@Param("start")long start,@Param("count")long count,@Param("mask")${module.jteeMaskAlias} mask);
 
-        @Select("${'<script>'}"
-            + "SELECT COUNT(*) FROM ${module.databaseView} "
-            + "<if test='filter!=null'>WHERE ${'${filter}'}</if> "
-            + "${'</script>'}")
-        public long count(@Param("filter")String filter);
+        <c:choose>
+            <c:when test="${datasource.databaseType==\"postgresql\"}">
+                @Select("${'<script>'}"
+                    + "SELECT COUNT(*) FROM ${module.databaseView} "
+                    + "<if test='filter!=null'>WHERE ${'${filter.toStringPostgresql()}'}</if> "
+                    + "${'</script>'}")</c:when>
+            <c:when test="${datasource.databaseType==\"oracle\"}">
+                @Select("${'<script>'}"
+                    + "SELECT COUNT(*) FROM ${module.databaseView} "
+                    + "<if test='filter!=null'>WHERE ${'${filter.toStringOracle()}'}</if> "
+                    + "${'</script>'}")</c:when></c:choose>
+        public long count(@Param("filter")FilterExpr filter);
         <c:forEach items="${pac:read(module,\"$.fields[?(@.javaType in ['Integer','Double','java.util.Date'])]\")}" var="field">
-            @Select(
-                "${"<"}script${">"}"
-                    + "SELECT MAX(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
-                    + "<if test='filter!=null'>WHERE ${'${filter}'}</if> "
-                    + "${"<"}/script${">"}")
-            public ${field.javaType} max${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
-            @Select(
-                "${"<"}script${">"}"
-                    + "SELECT MIN(${pac:upper(field.databaseColumn)}) FROM ${module.databaseView} "
-                    + "<if test='filter!=null'>WHERE ${'${filter}'}</if> "
-                    + "${"<"}/script${">"}")
-            public ${field.javaType} min${pac:upperFirst(field.databaseColumn)}(@Param("filter") String filter);
+            <c:choose>
+                <c:when test="${datasource.databaseType==\"postgresql\"}">
+                @Select(
+                    "${"<"}script${">"}"
+                        + "SELECT COALESCE(MAX(${pac:upper(field.databaseColumn)}),${'${defaultValue}'}) FROM ${module.databaseView} "
+                        + "<if test='filter!=null'>WHERE ${'${filter.toStringPostgresql()}'}</if> "
+                        + "${"<"}/script${">"}")
+                public ${field.javaType} max${pac:upperFirst(field.databaseColumn)}(@Param("filter") FilterExpr filter,@Param("defaultValue") ${field.javaType} defaultValue);
+                @Select(
+                    "${"<"}script${">"}"
+                        + "SELECT COALESCE(MIN(${pac:upper(field.databaseColumn)}),${'${defaultValue}'}) FROM ${module.databaseView} "
+                        + "<if test='filter!=null'>WHERE ${'${filter.toStringOracle()}'}</if> "
+                        + "${"<"}/script${">"}")
+                public ${field.javaType} min${pac:upperFirst(field.databaseColumn)}(@Param("filter") FilterExpr filter,@Param("defaultValue") ${field.javaType} defaultValue);
+                </c:when>
+            </c:choose>
+            <c:choose>
+                <c:when test="${datasource.databaseType==\"oracle\"}">
+                @Select(
+                    "${"<"}script${">"}"
+                        + "SELECT DECODE(MAX(${pac:upper(field.databaseColumn)}),NULL,${'${defaultValue}'}) FROM ${module.databaseView} "
+                        + "<if test='filter!=null'>WHERE ${'${filter.toStringPostgresql()}'}</if> "
+                        + "${"<"}/script${">"}")
+                public ${field.javaType} max${pac:upperFirst(field.databaseColumn)}(@Param("filter") FilterExpr filter,@Param("defaultValue") ${field.javaType} defaultValue);
+                @Select(
+                    "${"<"}script${">"}"
+                        + "SELECT DECODE(MIN(${pac:upper(field.databaseColumn)}),NULL,${'${defaultValue}'}) FROM ${module.databaseView} "
+                        + "<if test='filter!=null'>WHERE ${'${filter.toStringOracle()}'}</if> "
+                        + "${"<"}/script${">"}")
+                public ${field.javaType} min${pac:upperFirst(field.databaseColumn)}(@Param("filter") FilterExpr filter,@Param("defaultValue") ${field.javaType} defaultValue);
+                </c:when>
+            </c:choose>
         </c:forEach>
 <%--
         <c:forEach items="${pac:read(module,\"$.fields[?(@.special.type=='next')]\")}" var="field">
