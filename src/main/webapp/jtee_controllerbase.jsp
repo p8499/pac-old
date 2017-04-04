@@ -202,7 +202,7 @@ public abstract class ${module.jteeControllerBaseAlias} {
     @Value(value="${"#{jackson}"}")
     protected ObjectMapper jackson;
 
-    @Value(value="${String.format("#{%s}",pac:lowerFirst(module.jteServiceAlias))}")
+    @Value(value="${String.format("#{%s}",pac:lowerFirst(module.jteeServiceAlias))}")
     protected ${module.jteeServiceAlias} ${pac:lowerFirst(module.jteeServiceAlias)};
 }
 </pac:java>
