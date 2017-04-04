@@ -16,32 +16,22 @@
             <c:set target="${nonkeys}" property="${field.databaseColumn}" value="${field}"/></c:otherwise></c:choose></c:forEach>
 <pac:java>
 package ${sessionScope.json.envJtee.packageControllerBase};
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLConnection;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolation;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Update;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StreamUtils;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ${sessionScope.json.envJtee.packageBase}.*;
 import ${sessionScope.json.envJtee.packageBean}.${module.jteeBeanAlias};
 import ${sessionScope.json.envJtee.packageMask}.${module.jteeMaskAlias};
-import ${sessionScope.json.envJtee.packageMapper}.${module.datasource}.${module.jteeMapperAlias};
+import ${sessionScope.json.envJtee.packageService}.${module.jteeServiceAlias};
 
 public abstract class ${module.jteeControllerBaseAlias} {
     protected static final String path = "${module.jteeControllerPath}";
@@ -61,10 +51,6 @@ public abstract class ${module.jteeControllerBaseAlias} {
 
     protected abstract ${module.jteeBeanAlias} onGet(HttpSession session, HttpServletRequest request, HttpServletResponse response, <c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach> ${module.jteeMaskAlias} mask) throws Exception;
 
-    protected ${module.jteeBeanAlias} baseGet(<c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach> ${module.jteeMaskAlias} mask) {
-        return ${pac:lowerFirst(module.jteeMapperAlias)}.get(<c:forEach items="${keys}" var="keyItem">${keyItem.key},</c:forEach> mask);
-    }
-
     @RequestMapping(value = path<c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}">+pathKey</c:if>, method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public String add(
             HttpSession session,
@@ -78,14 +64,6 @@ public abstract class ${module.jteeControllerBaseAlias} {
     }
 
     protected abstract ${module.jteeBeanAlias} onAdd(HttpSession session, HttpServletRequest request, HttpServletResponse response, <c:if test="${!pac:read(module,\"uniques[?(@.key)]\")[0].serial}"><c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach></c:if> ${module.jteeBeanAlias} bean) throws Exception;
-
-    protected ${module.jteeBeanAlias} baseAdd(${module.jteeBeanAlias} bean) {
-        if (!validatorFactory.getValidator().validate(bean, Insert.class).isEmpty()) {
-            return null;
-        }
-        ${pac:lowerFirst(module.jteeMapperAlias)}.add(bean);
-        return bean;
-    }
 
     @RequestMapping(value = path + pathKey, method = RequestMethod.PUT, produces = "application/json;charset=UTF-8")
     public String update(
@@ -103,17 +81,6 @@ public abstract class ${module.jteeControllerBaseAlias} {
 
     protected abstract ${module.jteeBeanAlias} onUpdate(HttpSession session, HttpServletRequest request, HttpServletResponse response, <c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach> ${module.jteeBeanAlias} bean, ${module.jteeMaskAlias} mask) throws Exception;
 
-    protected ${module.jteeBeanAlias} baseUpdate(${module.jteeBeanAlias} bean, ${module.jteeMaskAlias} mask) {
-        Set${"<"}ConstraintViolation${"<"}${module.jteeBeanAlias}${">"}${">"} violationSet = validatorFactory.getValidator().validate(bean, Update.class);
-        for (ConstraintViolation${"<"}${module.jteeBeanAlias}${">"} violation : violationSet) {
-            if (mask.get(violation.getPropertyPath().toString())) {
-                return null;
-            }
-        }
-        ${pac:lowerFirst(module.jteeMapperAlias)}.update(bean, mask);
-        return bean;
-    }
-
     @RequestMapping(value = path + pathKey, method = RequestMethod.DELETE, produces = "application/json;charset=UTF-8")
     public void delete(
             HttpSession session,
@@ -125,10 +92,6 @@ public abstract class ${module.jteeControllerBaseAlias} {
     }
 
     protected abstract void onDelete(HttpSession session, HttpServletRequest request, HttpServletResponse response, <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>) throws Exception;
-
-    protected boolean baseDelete(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>) {
-        return ${pac:lowerFirst(module.jteeMapperAlias)}.delete(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.key}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
-    }
 
     @RequestMapping(value = path, method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     public String query(
@@ -157,14 +120,6 @@ public abstract class ${module.jteeControllerBaseAlias} {
     protected abstract Long onCount(HttpSession session, HttpServletRequest request, HttpServletResponse response, FilterExpr filter) throws Exception;
 
     protected abstract List${"<"}${module.jteeBeanAlias}${">"} onQuery(HttpSession session, HttpServletRequest request, HttpServletResponse response, FilterExpr filter, OrderByListExpr orderByList, long start, long count, ${module.jteeMaskAlias} mask) throws Exception;
-
-    protected long baseCount(FilterExpr filter) {
-        return ${pac:lowerFirst(module.jteeMapperAlias)}.count(filter);
-    }
-
-    protected List${"<"}${module.jteeBeanAlias}${">"} baseQuery(FilterExpr filter, OrderByListExpr orderByList, long start, long count, ${module.jteeMaskAlias} mask) {
-        return ${pac:lowerFirst(module.jteeMapperAlias)}.query(filter, orderByList, start, count, mask);
-    }
 
     @RequestMapping(
             value = attachPath + pathKey,
@@ -247,10 +202,7 @@ public abstract class ${module.jteeControllerBaseAlias} {
     @Value(value="${"#{jackson}"}")
     protected ObjectMapper jackson;
 
-    @Value(value="${"#{validatorFactory}"}")
-    protected LocalValidatorFactoryBean validatorFactory;
-
-    @Value(value="${String.format("#{%s}",pac:lowerFirst(module.jteeMapperAlias))}")
-    protected ${module.jteeMapperAlias} ${pac:lowerFirst(module.jteeMapperAlias)};
+    @Value(value="${String.format("#{%s}",pac:lowerFirst(module.jteServiceAlias))}")
+    protected ${module.jteeServiceAlias} ${pac:lowerFirst(module.jteeServiceAlias)};
 }
 </pac:java>

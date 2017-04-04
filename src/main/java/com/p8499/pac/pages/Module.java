@@ -34,6 +34,7 @@ public class Module {
         target.put("jteeBeanAlias", Util.extract(body, "jteeBeanAlias"));
         target.put("jteeMaskAlias", Util.extract(body, "jteeMaskAlias"));
         target.put("jteeMapperAlias", Util.extract(body, "jteeMapperAlias"));
+        target.put("jteeServiceAlias", Util.extract(body, "jteeServiceAlias"));
         target.put("jteeControllerBaseAlias", Util.extract(body, "jteeControllerBaseAlias"));
         target.put("jteeControllerPath", Util.extract(body, "jteeControllerPath"));
         target.put("jteeAttachmentControllerPath", Util.extract(body, "jteeAttachmentControllerPath"));

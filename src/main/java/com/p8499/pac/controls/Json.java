@@ -102,6 +102,7 @@ public class Json {
             downloadJava(request, "jtee_bean", i, new File(folder, "src/main/java"), (String) envJtee.get("packageBean"), (String) modules.get(i).get("jteeBeanAlias"));
             downloadJava(request, "jtee_mask", i, new File(folder, "src/main/java"), (String) envJtee.get("packageMask"), (String) modules.get(i).get("jteeMaskAlias"));
             downloadJava(request, "jtee_mapper", i, new File(folder, "src/main/java"), (String) envJtee.get("packageMapper") + "." + modules.get(i).get("datasource"), (String) modules.get(i).get("jteeMapperAlias"));
+            downloadJava(request, "jtee_service", i, new File(folder, "src/main/java"), (String) envJtee.get("packageService"), (String) modules.get(i).get("jteeServiceAlias"));
             downloadJava(request, "jtee_controllerbase", i, new File(folder, "src/main/java"), (String) envJtee.get("packageControllerBase"), (String) modules.get(i).get("jteeControllerBaseAlias"));
         }
         File zip = zip(folder.listFiles(), new File(folder, envJtee.get("app") + ".zip"));

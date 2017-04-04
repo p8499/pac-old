@@ -31,6 +31,7 @@ public class EnvJtee {
         target.put("packageBean", Util.extract(body, "packageBean"));
         target.put("packageMask", Util.extract(body, "packageMask"));
         target.put("packageMapper", Util.extract(body, "packageMapper"));
+        target.put("packageService", Util.extract(body, "packageService"));
         target.put("packageControllerBase", Util.extract(body, "packageControllerBase"));
         return "";
     }

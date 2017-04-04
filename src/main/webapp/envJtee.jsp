@@ -54,7 +54,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form data-toggle="validator"
-                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}envJtee?path=${requestScope.path}',type:'PUT',data:{app:$('#app').val(),baseUrl:$('#baseUrl').val(),packageBase:$('#packageBase').val(),packageBean:$('#packageBean').val(),packageMask:$('#packageMask').val(),packageMapper:$('#packageMapper').val(),packageController:$('#packageController').val()},success:function(response){window.location.reload();}});">
+                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}envJtee?path=${requestScope.path}',type:'PUT',data:{app:$('#app').val(),baseUrl:$('#baseUrl').val(),packageBase:$('#packageBase').val(),packageBean:$('#packageBean').val(),packageMask:$('#packageMask').val(),packageMapper:$('#packageMapper').val(),packageService:$('#packageService').val(),packageControllerBase:$('#packageControllerBase').val()},success:function(response){window.location.reload();}});">
                         <div class="form-group">
                             <label for="app">App</label>
                             <input class="form-control" id="app" type="text" pattern="^[A-Za-z0-9_]+$"
@@ -89,6 +89,12 @@
                             <input class="form-control" id="packageMapper" type="text"
                                    pattern="^([a-z_]{1}[a-z0-9_]*(\.[a-z_]{1}[a-z0-9_]*)*)$"
                                    value="${requestScope.target.packageMapper}"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="packageService">Package Service</label>
+                            <input class="form-control" id="packageService" type="text"
+                                   pattern="^([a-z_]{1}[a-z0-9_]*(\.[a-z_]{1}[a-z0-9_]*)*)$"
+                                   value="${requestScope.target.packageService}"/>
                         </div>
                         <div class="form-group">
                             <label for="packageControllerBase">Package Controller Base</label>

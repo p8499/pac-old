@@ -70,7 +70,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <form data-toggle="validator"
-                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}module?path=${requestScope.path}',type:'PUT',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#jteeBeanAlias').val(),jteeMaskAlias:$('#jteeMaskAlias').val(),jteeMapperAlias:$('#jteeMapperAlias').val(),jteeControllerBaseAlias:$('#jteeControllerBaseAlias').val(),jteeControllerPath:$('#jteeControllerPath').val(),jteeAttachmentControllerPath:$('#jteeAttachmentControllerPath').val(),androidBeanAlias:$('#androidBeanAlias').val(),androidMaskAlias:$('#androidMaskAlias').val(),androidStubAlias:$('#androidStubAlias').val()},success:function(response){window.location.reload();}});">
+                          onsubmit="event.preventDefault();$.ajax({url:'${baseUrl}module?path=${requestScope.path}',type:'PUT',data:{id:$('#id').val(),description:$('#description').val(),comment:$('#comment').val(),datasource:$('#datasource').val(),databaseTable:$('#databaseTable').val(),databaseView:$('#databaseView').val(),jteeBeanAlias:$('#jteeBeanAlias').val(),jteeMaskAlias:$('#jteeMaskAlias').val(),jteeMapperAlias:$('#jteeMapperAlias').val(),jteeServiceAlias:$('#jteeServiceAlias').val(),jteeControllerBaseAlias:$('#jteeControllerBaseAlias').val(),jteeControllerPath:$('#jteeControllerPath').val(),jteeAttachmentControllerPath:$('#jteeAttachmentControllerPath').val(),androidBeanAlias:$('#androidBeanAlias').val(),androidMaskAlias:$('#androidMaskAlias').val(),androidStubAlias:$('#androidStubAlias').val()},success:function(response){window.location.reload();}});">
                         <div class="form-group">
                             <label for="id">ID</label>
                             <input class="form-control" id="id" type="text" value="${requestScope.target.id}"
@@ -124,6 +124,12 @@
                             <label for="jteeMapperAlias">J2EE Mapper Alias</label>
                             <input class="form-control" id="jteeMapperAlias" type="text"
                                    value="${requestScope.target.jteeMapperAlias}"
+                                   pattern="^[A-Za-z_$]+[a-zA-Z0-9_$]*$"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="jteeServiceAlias">J2EE Service Alias</label>
+                            <input class="form-control" id="jteeServiceAlias" type="text"
+                                   value="${requestScope.target.jteeServiceAlias}"
                                    pattern="^[A-Za-z_$]+[a-zA-Z0-9_$]*$"/>
                         </div>
                         <div class="form-group">

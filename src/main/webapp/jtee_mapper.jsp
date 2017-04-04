@@ -13,7 +13,7 @@
         <c:otherwise>
             <c:set target="${nonkeys}" property="${field.databaseColumn}" value="${field}"/></c:otherwise></c:choose></c:forEach>
 <c:set var="datasource" value="${pac:read(sessionScope.json.envJtee,String.format(\"$.datasources[?(@.id=='%s')]\",module.datasource))[0]}"/>
-<%--<pac:java>--%>
+<pac:java>
     package ${sessionScope.json.envJtee.packageMapper}.${module.datasource};
     import java.util.List;
     import org.apache.ibatis.annotations.Select;
@@ -78,6 +78,19 @@
 
         @Delete("DELETE FROM ${module.databaseTable} WHERE <c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${pac:upper(keyItem.key)}=${String.format("#{%s}",keyItem.key)}<c:if test="${!keyStatus.last}"> AND </c:if></c:forEach>")
         public boolean delete(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">@Param("${keyItem.value.databaseColumn}")${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
+
+        <c:choose>
+            <c:when test="${datasource.databaseType==\"postgresql\"}">
+                @Delete("${'<script>'}"
+                    + "DELETE FROM ${module.databaseTable} "
+                    + "<if test='filter!=null'>WHERE ${filter.toStringPostgresql()}</if>"
+                    + "${'</script>'}")</c:when>
+            <c:when test="${datasource.databaseType==\"oracle\"}">
+                @Delete("${'<script>'}"
+                    + "DELETE FROM ${module.databaseTable} "
+                    + "<if test='filter!=null'>WHERE ${filter.toStringOracle()}</if>"
+                    + "${'</script>'}")</c:when></c:choose>
+        public void delete(@Param("filter") FilterExpr filter);
 
         <c:choose>
             <c:when test="${datasource.databaseType==\"postgresql\"}">
@@ -237,4 +250,4 @@
                     <c:if test="${!dKeyColumnStatus.last}">,</c:if></c:forEach>
             );</c:forEach>--%>
     }
-<%--</pac:java>--%>
+</pac:java>
