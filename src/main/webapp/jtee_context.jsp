@@ -21,25 +21,24 @@
     </beans:bean>
     <beans:bean id="jackson" class="com.fasterxml.jackson.databind.ObjectMapper"/>
     <c:forEach items="${sessionScope.json.envJtee.datasources}" var="datasource">
-        <beans:bean id="${datasource.id}" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-            <beans:property name="driverClassName" value="${String.format("${%s.driverClassName}",datasource.id)}"/>
-            <beans:property name="url" value="${String.format("${%s.url}",datasource.id)}"/>
-            <beans:property name="username" value="${String.format("${%s.username}",datasource.id)}"/>
-            <beans:property name="password" value="${String.format("${%s.password}",datasource.id)}"/>
-        </beans:bean>
-        <beans:bean id="${datasource.id}_factory" class="org.mybatis.spring.SqlSessionFactoryBean">
-            <beans:property name="dataSource" ref="${datasource.id}"/>
-            <beans:property name="configLocation" value="WEB-INF/mybatis-config.xml"/>
-        </beans:bean>
-        <beans:bean id="${datasource.id}_transaction" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-            <beans:property name="dataSource" ref="${datasource.id}"/>
-        </beans:bean>
-        <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-            <beans:property name="basePackage" value="${sessionScope.json.envJtee.packageMapper}.${datasource.id}"/>
-            <beans:property name="sqlSessionFactoryBeanName" value="${datasource.id}_factory"/>
-        </beans:bean>
-        <tx:annotation-driven transaction-manager="${datasource.id}_transaction"/>
-    </c:forEach>
+    <beans:bean id="${datasource.id}" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <beans:property name="driverClassName" value="${String.format("${%s.driverClassName}",datasource.id)}"/>
+        <beans:property name="url" value="${String.format("${%s.url}",datasource.id)}"/>
+        <beans:property name="username" value="${String.format("${%s.username}",datasource.id)}"/>
+        <beans:property name="password" value="${String.format("${%s.password}",datasource.id)}"/>
+    </beans:bean>
+    <beans:bean id="${datasource.id}_factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <beans:property name="dataSource" ref="${datasource.id}"/>
+        <beans:property name="configLocation" value="WEB-INF/mybatis-config.xml"/>
+    </beans:bean>
+    <beans:bean id="${datasource.id}_transaction" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <beans:property name="dataSource" ref="${datasource.id}"/>
+    </beans:bean>
+    <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <beans:property name="basePackage" value="${sessionScope.json.envJtee.packageMapper}.${datasource.id}"/>
+        <beans:property name="sqlSessionFactoryBeanName" value="${datasource.id}_factory"/>
+    </beans:bean>
+    <tx:annotation-driven transaction-manager="${datasource.id}_transaction"/></c:forEach>
     <context:component-scan base-package="${sessionScope.json.envJtee.packageBase}">
         <context:exclude-filter type="regex" expression="${sessionScope.json.envJtee.packageMapper}.*"/>
     </context:component-scan>
@@ -48,4 +47,3 @@
     <task:scheduler id="scheduler" pool-size="3"/>
     <task:annotation-driven scheduler="scheduler" executor="executor"/>
 </beans:beans>
-</beans>
