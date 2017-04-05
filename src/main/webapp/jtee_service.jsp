@@ -31,7 +31,7 @@
     import java.util.Set;
     @Service("${pac:lowerFirst(module.jteeServiceAlias)}")
     public class ${module.jteeServiceAlias}
-    {   @Transactional(readOnly=true)
+    {   @Transactional(value="${module.datasource}_transaction",readOnly=true)
         public ${module.jteeBeanAlias} get(<c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach> ${module.jteeMaskAlias} mask)
         {   return ${pac:lowerFirst(module.jteeMapperAlias)}.get(<c:forEach items="${keys}" var="keyItem">${keyItem.key},</c:forEach> mask);
         }
@@ -66,27 +66,27 @@
     {   ${pac:lowerFirst(module.jteeMapperAlias)}.deleteWhere(filter);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(value="${module.datasource}_transaction",readOnly=true)
     public long count(FilterExpr filter)
     {   return ${pac:lowerFirst(module.jteeMapperAlias)}.count(filter);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(value="${module.datasource}_transaction",readOnly=true)
     public List${"<"}${module.jteeBeanAlias}${">"} query(FilterExpr filter,OrderByListExpr orderByList,long start,long count,${module.jteeMaskAlias} mask)
     {   return ${pac:lowerFirst(module.jteeMapperAlias)}.query(filter,orderByList,start,count,mask);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(value="${module.datasource}_transaction",readOnly=true)
     public boolean exists(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.value.javaType} ${keyItem.value.databaseColumn}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>)
     {   return ${pac:lowerFirst(module.jteeMapperAlias)}.exists(<c:forEach items="${keys}" var="keyItem" varStatus="keyStatus">${keyItem.key}<c:if test="${!keyStatus.last}">,</c:if></c:forEach>);
     }
     <c:forEach items="${pac:read(module,\"$.fields[?(@.javaType in ['Integer','Double','java.util.Date'])]\")}" var="field">
-        @Transactional(readOnly=true)
+        @Transactional(value="${module.datasource}_transaction",readOnly=true)
         public ${field.javaType} max${pac:upperFirst(field.databaseColumn)}(FilterExpr filter,${field.javaType} defaultValue)
         {   return ${pac:lowerFirst(module.jteeMapperAlias)}.max${pac:upperFirst(field.databaseColumn)}(filter,defaultValue);
         }
 
-        @Transactional(readOnly=true)
+        @Transactional(value="${module.datasource}_transaction",readOnly=true)
         public ${field.javaType} min${pac:upperFirst(field.databaseColumn)}(FilterExpr filter,${field.javaType} defaultValue)
         {   return ${pac:lowerFirst(module.jteeMapperAlias)}.max${pac:upperFirst(field.databaseColumn)}(filter,defaultValue);
         }</c:forEach>
