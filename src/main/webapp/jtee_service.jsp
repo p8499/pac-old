@@ -63,7 +63,7 @@
 
     @Transactional(value="${module.datasource}_transaction")
     public void delete(FilterExpr filter)
-    {   ${pac:lowerFirst(module.jteeMapperAlias)}.delete(filter);
+    {   ${pac:lowerFirst(module.jteeMapperAlias)}.deleteWhere(filter);
     }
 
     @Transactional(readOnly=true)
