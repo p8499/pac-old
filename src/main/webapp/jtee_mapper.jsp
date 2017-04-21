@@ -83,12 +83,12 @@
             <c:when test="${datasource.databaseType==\"postgresql\"}">
                 @Delete("${'<script>'}"
                     + "DELETE FROM ${module.databaseTable} "
-                    + "<if test='filter!=null'>WHERE ${filter.toStringPostgresql()}</if>"
+                    + "<if test='filter!=null'>WHERE ${'filter.toStringPostgresql()'}</if>"
                     + "${'</script>'}")</c:when>
             <c:when test="${datasource.databaseType==\"oracle\"}">
                 @Delete("${'<script>'}"
                     + "DELETE FROM ${module.databaseTable} "
-                    + "<if test='filter!=null'>WHERE ${filter.toStringOracle()}</if>"
+                    + "<if test='filter!=null'>WHERE ${'filter.toStringOracle()'}</if>"
                     + "${'</script>'}")</c:when></c:choose>
         public void deleteWhere(@Param("filter") FilterExpr filter);
 
