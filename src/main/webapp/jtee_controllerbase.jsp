@@ -187,6 +187,11 @@ public abstract class ${module.jteeControllerBaseAlias} {
 
     protected abstract void onDeleteAttach(HttpSession session, HttpServletRequest request, HttpServletResponse response, <c:forEach items="${keys}" var="keyItem">${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach> String name) throws Exception;
 
+    @RequestMapping(
+            value = attachPath + pathKey,
+            method = RequestMethod.GET,
+            produces = "application/json;charset=UTF-8"
+    )
     public String listAttaches(
             HttpSession session,
             HttpServletRequest request,
