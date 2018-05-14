@@ -50,11 +50,21 @@
         public ${module.jteeBeanAlias} get(<c:forEach items="${keys}" var="keyItem">@Param("${keyItem.value.databaseColumn}")${keyItem.value.javaType} ${keyItem.value.databaseColumn},</c:forEach>@Param("mask")${module.jteeMaskAlias} mask);
 
         <c:choose>
-            <c:when test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}">
-                @Insert("INSERT INTO ${module.databaseTable} (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${pac:upper(field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>) VALUES (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")
-                @org.apache.ibatis.annotations.Options(useGeneratedKeys=true,keyProperty="bean.${pac:read(module,"uniques[?(@.key)]")[0].items[0]}")</c:when>
-            <c:otherwise>
-                @Insert("INSERT INTO ${module.databaseTable} (${pac:join(",",pac:upper(pac:read(module.fields,"$..databaseColumn")))}) VALUES (<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")</c:otherwise></c:choose>
+            <c:when test="${datasource.databaseType==\"postgresql\"}">
+                <c:choose>
+                    <c:when test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}">
+                        @Insert("INSERT INTO ${module.databaseTable} (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${pac:upper(field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>) VALUES (<c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")
+                        @org.apache.ibatis.annotations.Options(useGeneratedKeys=true,keyProperty="bean.${pac:read(module,"uniques[?(@.key)]")[0].items[0]}")</c:when>
+                    <c:otherwise>
+                        @Insert("INSERT INTO ${module.databaseTable} (${pac:join(",",pac:upper(pac:read(module.fields,"$..databaseColumn")))}) VALUES (<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")</c:otherwise></c:choose></c:when>
+            <c:when test="${datasource.databaseType==\"oracle\"}">
+                <c:choose>
+                    <c:when test="${pac:read(module,\"uniques[?(@.key)]\")[0].serial}">
+                        @Insert("INSERT INTO ${module.databaseTable} (${pac:join(",",pac:upper(pac:read(module.fields,"$..databaseColumn")))}) VALUES (${module.databaseTable}_${pac:read(module,"uniques[?(@.key)]")[0].items[0]}.nextval <c:forEach items="${pac:read(nonkeys,\"$.*[?(@.source=='table')]\")}" var="field" varStatus="fieldStatus">,${String.format("#{bean.%s}",field.databaseColumn)}</c:forEach>)")
+                        @org.apache.ibatis.annotations.Options(useGeneratedKeys=true,keyProperty="bean.${pac:read(module,"uniques[?(@.key)]")[0].items[0]}")</c:when>
+                    <c:otherwise>
+                        @Insert("INSERT INTO ${module.databaseTable} (${pac:join(",",pac:upper(pac:read(module.fields,"$..databaseColumn")))}) VALUES (<c:forEach items="${module.fields}" var="field" varStatus="fieldStatus">${String.format("#{bean.%s}",field.databaseColumn)}<c:if test="${!fieldStatus.last}">,</c:if></c:forEach>)")</c:otherwise></c:choose></c:when>
+        </c:choose>
         public void add(@Param("bean")${module.jteeBeanAlias} bean);
 
         @Update("${'<script>'}"
