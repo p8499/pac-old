@@ -138,7 +138,7 @@
                     + "FROM ${module.databaseView} "
                     + "<if test='filter!=null'>WHERE ${'${filter.toStringOracle()}'} </if>"
                     + "<if test='order!=null'>ORDER BY ${'${order.toString()}'} </if>"
-                    + ") B WHERE ROWNUM &lt;= ${'#{start}+1'}) A WHERE B_ROWNUM &gt;= ${'#{count}+#{start}'}"
+                    + ") B WHERE ROWNUM &gt;= ${'#{start}+1'}) A WHERE B_ROWNUM &lt;= ${'#{count}+#{start}'}"
                     + "${'</script>'}")</c:when></c:choose>
         public List<${module.jteeBeanAlias}> query(@Param("filter")FilterExpr filter,@Param("order")OrderByListExpr order,@Param("start")long start,@Param("count")long count,@Param("mask")${module.jteeMaskAlias} mask);
 
